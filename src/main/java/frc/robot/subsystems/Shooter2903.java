@@ -1,8 +1,10 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotMap;
 
 public class Shooter2903 extends SubsystemBase {
   /**
@@ -14,11 +16,12 @@ public class Shooter2903 extends SubsystemBase {
     final double MAX_ANGLE = 45; // degree
     final double GRAV = 9.8; // m/s/s
 
-    TalonSRX shooterWheelL;
-    TalonSRX shooterWheelR;
+    WPI_TalonSRX shooterWheelL;
+    WPI_TalonSRX shooterWheelR;
 
   public Shooter2903() {
-
+    shooterWheelL = new WPI_TalonSRX(RobotMap.shooterWheelL);
+    shooterWheelR = new WPI_TalonSRX(RobotMap.shooterWheelR);
   }
 
   @Override
@@ -26,8 +29,10 @@ public class Shooter2903 extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void shooting( double velocity, double angle){
-    
+  public void shooting( double vel){
+    double power = 0;
+    power = vel/MAX_VEL;
+    shooterWheelL.set(power);
   }
 
   public void setAngle(double angle){
