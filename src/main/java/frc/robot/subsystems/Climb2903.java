@@ -5,9 +5,28 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotMap;
 
 public class Climb2903 extends SubsystemBase {
+
+    public Solenoid extendLeft = new Solenoid(RobotMap.extendLeft);
+    public Solenoid extendRight = new Solenoid(RobotMap.extendRight);
+    public Solenoid armsRise = new Solenoid(RobotMap.armsRise);
+
+    public void openExtendLeft() {
+        extendLeft.set(true);
+    }
+
+    public void openExtendRight() {
+        extendRight.set(true);
+
+    }
+
+    public void openArmsRise() {
+        armsRise.set(true);
+    }
 
     public Climb2903() {
 

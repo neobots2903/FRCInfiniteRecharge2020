@@ -15,10 +15,13 @@ package frc.robot;
  */
 public class RobotMap {
 
+    public static final int TBD = 0;
     //Servos
+
     //Motors
+
     //Pneumatics
-    //Solenoids
-    public static final int leftArm = 13;
-    public static final int rightArm = 14;
+    public static final int extendLeft = 0; //Do this one first
+    public static final int extendRight = 0; //And this one second
+    public static final int armsRise = 0;
 }
