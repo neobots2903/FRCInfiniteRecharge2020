@@ -19,7 +19,8 @@ public class RobotMap {
     //Servos
 
     //Motors
-
+    public static final int shooterWheelL = TBD;
+    public static final int shooterWheelR = TBD;
     //Pneumatics
     public static final int extendLeft = 0; //Do this one first
     public static final int extendRight = 0; //And this one second
