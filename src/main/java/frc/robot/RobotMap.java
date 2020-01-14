@@ -38,7 +38,7 @@ public class RobotMap {
     public static final int LeftRearLimit = TBD;
 
     //Pneumatics
-    public static final int extendLeft = TBD; //Do this one first
-    public static final int extendRight = TBD; //And this one second
-    public static final int armsRise = TBD;
+    public static final int armRiser = 0; //start with this actually
+    public static final int leftArm = 0; //Do this one first
+    public static final int rightArm = 0; //And this one second
 }
