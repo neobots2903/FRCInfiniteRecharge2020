@@ -7,10 +7,16 @@
 
 package frc.robot;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.Climb2903;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.NavX2903;
+import frc.robot.subsystems.Shooter2903;
+import frc.robot.subsystems.SwerveDrive2903;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -22,6 +28,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  public final SwerveDrive2903 swerveDriveSubsystem = new SwerveDrive2903();
+  public final Climb2903 climbSubsystem = new Climb2903();
+  public final Shooter2903 shooterSubsystem = new Shooter2903();
+  public final AHRS ahrs = new AHRS();
+  public final NavX2903 navXSubsystem = new NavX2903();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 

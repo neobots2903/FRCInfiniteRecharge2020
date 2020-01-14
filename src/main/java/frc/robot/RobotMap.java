@@ -21,8 +21,24 @@ public class RobotMap {
     //Motors
     public static final int shooterWheelL = TBD;
     public static final int shooterWheelR = TBD;
+
+    public static final int LeftFrontForward = TBD;
+    public static final int LeftFrontTurn = TBD;
+    public static final int RightFrontForward = TBD;
+    public static final int RightFrontTurn = TBD;
+    public static final int RightRearForward = TBD;
+    public static final int RightRearTurn = TBD;
+    public static final int LeftRearForward = TBD;
+    public static final int LeftRearTurn = TBD;
+
+    //Limit
+    public static final int LeftFrontLimit = TBD;
+    public static final int RightFrontLimit = TBD;
+    public static final int RightRearLimit = TBD;
+    public static final int LeftRearLimit = TBD;
+
     //Pneumatics
-    public static final int extendLeft = 0; //Do this one first
-    public static final int extendRight = 0; //And this one second
-    public static final int armsRise = 0;
+    public static final int extendLeft = TBD; //Do this one first
+    public static final int extendRight = TBD; //And this one second
+    public static final int armsRise = TBD;
 }
