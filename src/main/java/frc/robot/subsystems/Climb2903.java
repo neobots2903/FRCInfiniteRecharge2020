@@ -1,7 +1,7 @@
 //Climber - Top of robot, on both sides. Starts within robot frame, can extend up and then further outwards, clips to bar, and pulls down to lift robot.
 //Hardware involved:
-//- Two pneumatic solenoids: for raising and lowering climb arms (MUST NOT lower arms if robot is climbing)
-//- Two larger pneumatic solenoids: for reaching towards bar and pulling robot up. (MUST NOT extend if smaller solenoids are closed)
+//- One pneumatic solenoid: for raising and lowering climb arms (MUST NOT lower arms if robot is climbing)
+//- One larger pneumatic solenoid: for reaching towards bar and pulling robot up. (MUST NOT extend if smaller solenoids are closed)
 
 package frc.robot.subsystems;
 
