@@ -14,17 +14,22 @@ public class Shooter2903 extends SubsystemBase {
      * Creates a new ExampleSubsystem.
      */
 
-    final double powerCellWeight = 0.142; // Kg
+    final double POWER_CELL_WEIGHT = 0.142; // Kg
+    final double POWER_CELL_DIAMETER = 17.78; //cm
     final double MAX_VEL = 111.5; // m/s
     final double MAX_ANGLE = 45; // degree
-    final double GRAV = 9.8; // m/s/s
+    final double GRAV = 9.80665; // m/s/s
 
     WPI_TalonSRX shooterWheelL;
     WPI_TalonSRX shooterWheelR;
+    WPI_TalonSRX shooterAngle;
+    WPI_TalonSRX intake;
 
     public Shooter2903() {
         shooterWheelL = new WPI_TalonSRX(RobotMap.shooterWheelL);
         shooterWheelR = new WPI_TalonSRX(RobotMap.shooterWheelR);
+        shooterAngle = new WPI_TalonSRX(RobotMap.shooterAngle);
+        intake = new WPI_TalonSRX(RobotMap.intake);
     }
 
     @Override
@@ -33,17 +38,17 @@ public class Shooter2903 extends SubsystemBase {
     }
 
     public void shoot(double vel) {
-        double power = vel / MAX_VEL;
+        double power = vel / MAX_VEL; //calc power
         shooterWheelL.set(power);
         shooterWheelR.set(power);
     }
 
-    public void setAngle(double angle) {
-
+    public void setAngle(double angle, double power) {
+        shooterAngle.set(power);
     }
 
     public void intake(double power) {
-
+        intake.set(power);
     }
 
     public double shooterAngleMath(double distance, double vel) {
