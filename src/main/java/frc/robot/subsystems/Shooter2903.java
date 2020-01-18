@@ -28,10 +28,10 @@ public class Shooter2903 extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void shooting( double vel){
-    double power = 0;
-    power = vel/MAX_VEL;
+  public void shoot( double vel){
+    double power = vel/MAX_VEL;
     shooterWheelL.set(power);
+    shooterWheelR.set(power);
   }
 
   public void setAngle(double angle){
@@ -39,7 +39,7 @@ public class Shooter2903 extends SubsystemBase {
   }
 
   public void intake(double power){
-
+      
   }
 
   public double shooterAngleMath(double distance, double vel){

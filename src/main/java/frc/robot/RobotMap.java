@@ -21,6 +21,8 @@ public class RobotMap {
     //Motors
     public static final int shooterWheelL = TBD;
     public static final int shooterWheelR = TBD;
+    public static final int shooterAngle = TBD;
+    public static final int intake = TBD;
 
     public static final int LeftFrontForward = TBD;
     public static final int LeftFrontTurn = TBD;
