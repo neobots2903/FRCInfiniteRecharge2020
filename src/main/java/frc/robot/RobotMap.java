@@ -44,4 +44,7 @@ public class RobotMap {
     public static final int leftArm = TBD; //Do this one first
     public static final int rightArm = TBD; //And this one second
 
+    //Digital input output
+    public static final int shooterAngleTopLimit = TBD;
+    public static final int shooterAngleBottomLimit = TBD;
 }
