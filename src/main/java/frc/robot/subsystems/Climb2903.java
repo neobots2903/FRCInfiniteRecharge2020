@@ -12,14 +12,12 @@ import frc.robot.RobotMap;
 public class Climb2903 extends SubsystemBase {
 
     public Solenoid armRiser;
-    public Solenoid leftArm;
-    public Solenoid rightArm;
+    public Solenoid armExtend;
     
 
     public Climb2903() {
         armRiser = new Solenoid(RobotMap.armRiser);
-        leftArm = new Solenoid(RobotMap.leftArm);
-        rightArm = new Solenoid(RobotMap.rightArm);
+        armExtend = new Solenoid(RobotMap.armExtend);
     }
 
     public void RaiseArms() {
@@ -30,20 +28,12 @@ public class Climb2903 extends SubsystemBase {
         armRiser.set(false);
     }
 
-    public void ExtendLeft() {
-        leftArm.set(true);
+    public void ExtendArmExtend() {
+        armExtend.set(true);
     }
 
-    public void RetractLeft() {
-        leftArm.set(false);
-    }
-
-    public void ExtendRight() {
-        rightArm.set(true);
-    }
-
-    public void RetractRight() {
-        rightArm.set(false);
+    public void RetractArmExtend() {
+        armExtend.set(false);
     }
 
     @Override
