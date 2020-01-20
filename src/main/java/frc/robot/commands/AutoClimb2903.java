@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climb2903;
 
 public class AutoClimb2903 extends CommandBase{
-    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+    
     private final Climb2903 climb2903;
 
     public AutoClimb2903(Climb2903 climb) {
@@ -19,11 +19,10 @@ public class AutoClimb2903 extends CommandBase{
         //Aim limelight up, UNFINISHED
         //angle slightly crooked with one arm on each side, , UNFINISHED
         climb2903.RaiseArms();
-        climb2903.ExtendLeft();
-        climb2903.ExtendRight();
+        climb2903.ExtendArmExtend();
         //angle parallel with the bar to click in, , UNFINISHED
-        climb2903.RetractLeft();
-        climb2903.RetractRight();
+        climb2903.RaiseArms();
+        climb2903.RetractArmExtend();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
