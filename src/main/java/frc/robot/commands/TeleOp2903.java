@@ -43,10 +43,8 @@ public class TeleOp2903 extends CommandBase {
         if(Robot.robotContainer.opJoy.getRawButton(8)){
             //Aim limelight up, UNFINISHED
             Robot.robotContainer.climbSubsystem.RaiseArms();
-            Robot.robotContainer.climbSubsystem.ExtendLeft();
-            Robot.robotContainer.climbSubsystem.ExtendRight();
-            Robot.robotContainer.climbSubsystem.RetractLeft();
-            Robot.robotContainer.climbSubsystem.RetractRight();
+            Robot.robotContainer.climbSubsystem.ExtendArm();
+            Robot.robotContainer.climbSubsystem.RetractArm();
         }
     }
 

@@ -28,11 +28,11 @@ public class Climb2903 extends SubsystemBase {
         armRiser.set(false);
     }
 
-    public void ExtendArmExtend() {
+    public void ExtendArm() {
         armExtend.set(true);
     }
 
-    public void RetractArmExtend() {
+    public void RetractArm() {
         armExtend.set(false);
     }
 
