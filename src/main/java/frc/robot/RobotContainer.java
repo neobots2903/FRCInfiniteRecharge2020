@@ -10,6 +10,7 @@ package frc.robot;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Climb2903;
@@ -33,6 +34,8 @@ public class RobotContainer {
     public final Shooter2903 shooterSubsystem = new Shooter2903();
     public final AHRS ahrs = new AHRS();
     public final NavX2903 navXSubsystem = new NavX2903();
+    public final Joystick driveJoy = new Joystick(RobotMap.driveJoy);
+    public final Joystick opJoy = new Joystick(RobotMap.opJoy);
 
     private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
