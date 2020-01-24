@@ -19,10 +19,10 @@ public class AutoClimb2903 extends CommandBase{
         //Aim limelight up, UNFINISHED
         //angle slightly crooked with one arm on each side, , UNFINISHED
         climb2903.RaiseArms();
-        climb2903.ExtendArmExtend();
+        climb2903.ExtendArm();
         //angle parallel with the bar to click in, , UNFINISHED
         climb2903.RaiseArms();
-        climb2903.RetractArmExtend();
+        climb2903.RetractArm();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
