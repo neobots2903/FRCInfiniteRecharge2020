@@ -12,9 +12,12 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.ArduinoLidar2903;
 import frc.robot.subsystems.Climb2903;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Limelight2903;
 import frc.robot.subsystems.NavX2903;
 import frc.robot.subsystems.Shooter2903;
 import frc.robot.subsystems.SwerveDrive2903;
@@ -36,10 +39,15 @@ public class RobotContainer {
     public final NavX2903 navXSubsystem = new NavX2903();
     public final Joystick driveJoy = new Joystick(RobotMap.driveJoy);
     public final Joystick opJoy = new Joystick(RobotMap.opJoy);
+    public final Limelight2903 limelightSubsystem = new Limelight2903();
+    public final ArduinoLidar2903 lidarSubsystem = new ArduinoLidar2903();
 
     private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
-
+    //public PIDController swervePower = new PIDController(0.1, 0, 0);
+    //public PIDController swerveAngle = new PIDController(0.1, 0, 0);
+    public PIDController visionStrafe = new PIDController(0.1, 0, 0);
+    public PIDController visionTurn = new PIDController(0.1, 0, 0);
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.

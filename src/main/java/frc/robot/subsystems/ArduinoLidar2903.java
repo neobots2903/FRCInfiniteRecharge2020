@@ -60,17 +60,17 @@ public class ArduinoLidar2903 extends SubsystemBase {
     }
     
     public enum LidarPosition {
-        Left, Center, Right
+        LEFT, CENTER, RIGHT
     }
     
     public int getDistance(LidarPosition pos) {
         if (noLidar) return -1;
         updateData();
-        if (pos == LidarPosition.Left)
+        if (pos == LidarPosition.LEFT)
             return leftDistance;
-        else if (pos == LidarPosition.Center)
+        else if (pos == LidarPosition.CENTER)
              return centerDistance;
-        else if (pos == LidarPosition.Right)
+        else if (pos == LidarPosition.RIGHT)
             return rightDistance;
         else
             return 0;

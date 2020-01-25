@@ -16,6 +16,10 @@ public class Limelight2903 extends SubsystemBase {
     public NetworkTableEntry tv; // Whether the limelight has any valid targets (0 or 1)
     public NetworkTableEntry ts; // Skew or rotation (-90 degrees to 0 degrees)
     
+    public Limelight2903() {
+        
+    }
+
     public void init() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         tx = table.getEntry("tx");
