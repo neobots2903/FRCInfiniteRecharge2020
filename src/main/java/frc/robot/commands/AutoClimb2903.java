@@ -6,7 +6,8 @@ import frc.robot.subsystems.Climb2903;
 public class AutoClimb2903 extends CommandBase{
     
     private final Climb2903 climb2903;
-
+    private final int DEGREES_TO_TURN = 15;
+    
     public AutoClimb2903(Climb2903 climb) {
         climb2903 = climb;
         // Use addRequirements() here to declare subsystem dependencies.
@@ -17,10 +18,10 @@ public class AutoClimb2903 extends CommandBase{
     @Override
     public void initialize() {
         //Aim limelight up, UNFINISHED
-        //angle slightly crooked with one arm on each side, , UNFINISHED
+        //angle slightly crooked with one arm on each side(Turn by DEGREES_TO_TURN), UNFINISHED
         climb2903.RaiseArms();
         climb2903.ExtendArm();
-        //angle parallel with the bar to click in, , UNFINISHED
+        //angle parallel with the bar to click in(Turn by -DEGREES_TO_TURN), UNFINISHED
         climb2903.RaiseArms();
         climb2903.RetractArm();
     }
