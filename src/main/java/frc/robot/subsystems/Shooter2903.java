@@ -14,6 +14,8 @@ public class Shooter2903 extends SubsystemBase {
 
     final double POWER_CELL_WEIGHT = 0.142; // Kg
     final double POWER_CELL_DIAMETER = 17.78; //cm
+    final double ROBOT_SHOOTER_HEIGHT = 0.33782; //m
+    final double GOAL_HEIGHT = 2.5 - ROBOT_SHOOTER_HEIGHT; //m
     final double MAX_VEL = 111.5; // m/s
     final double MAX_SHOOT_ANGLE = 45; // degree
     final double GRAV = 9.80665; // m/s/s
@@ -65,31 +67,69 @@ public class Shooter2903 extends SubsystemBase {
         intake.set(ControlMode.PercentOutput,power);
     }
 
-    public double shooterAngleMath(double distance, double vel) {
-        double angle = 0;
-        double mult = 0.95;
-        // math formula without air ressitance
-        angle = (Math.asin((distance * GRAV) / Math.pow(vel, 2))) / 2;
-        // add multiplier
-        angle = angle * mult;
-        if (angle < MAX_SHOOT_ANGLE)
-            return angle; // looking if angle is lower max angle
-        else
-            return -1; // -1 stands for error
+    public double tMax(double timeCorrect){
+        double time = Math.sqrt((2*GOAL_HEIGHT)/GRAV);
+        return time*timeCorrect;
     }
 
-    public double shooterVelMath(double distance, double angle) {
-        double vel = 0;
-        double mult = 0.95;
-        // math formula without air ressitance
-        vel = Math.sqrt((distance * GRAV) / Math.sin(2 * angle));
-        // add multiplier
-        vel = vel * mult;
-        if (vel < MAX_VEL)
-            return vel; // looking if velocity is lower max velocity
-        else
-            return -1; // -1 stands for error
+    public double VelInitX(double distance, double timeCorrect){
+        double Vix = distance/tMax(timeCorrect);
+        return Vix;
     }
+
+    public double VelInitY(double timeCorrect){
+        double Viy = (GOAL_HEIGHT + (0.5*GRAV*(Math.pow (tMax(timeCorrect), 2))))/tMax(timeCorrect);
+        return Viy;
+    }
+
+    public double InitVel(double distance, double timeCorrect){
+        double Vi = Math.sqrt(Math.pow(VelInitX(distance, timeCorrect), 2) + Math.pow(VelInitY(timeCorrect), 2));
+        return Vi;
+    }
+
+    public double Angle(double distance, double timeCorrect){
+        double angle = Math.atan(VelInitY(timeCorrect)/VelInitX(distance, timeCorrect))*(180/Math.PI);
+
+        return angle;
+    }
+
+    public double[] shootMath(double distance, double timeCorrect){
+        double InitVel = InitVel(distance, timeCorrect);
+        double Angle = Angle(distance, timeCorrect);
+        for(int a = 2; Angle > MAX_SHOOT_ANGLE || InitVel < MAX_VEL || a == 20; a++){
+            InitVel = InitVel(distance, timeCorrect/a); //dividing by a makes bigger velocity and smaller angle 
+            Angle = Angle(distance, timeCorrect/a);
+        }
+        double[] data = {InitVel, Angle};
+        if(InitVel > MAX_VEL && InitVel < MAX_VEL+5) data[0] = MAX_VEL;
+        if(InitVel > MAX_VEL+5) data[0] = -1;
+        if(Angle > MAX_SHOOT_ANGLE) data[1] = -1;
+        return data;
+    }
+
+    // public double shooterAngleMath(double distance, double vel) {
+    //     double angle = 0;
+    //     double mult = 0.95;
+    //     angle = (Math.asin((distance * GRAV) / Math.pow(vel, 2))) / 2;// math formula without air ressitance
+    //     // angle = angle * mult;// add multiplier
+    //     if (angle < MAX_SHOOT_ANGLE)
+    //         return angle; // looking if angle is lower than max angle
+    //     else
+    //         return -1; // -1 stands for error
+    // }
+
+    // public double shooterVelMath(double distance, double angle) {
+    //     double vel = 0;
+    //     double mult = 0.95;
+    //     // math formula without air ressitance
+    //     vel = Math.sqrt((distance * GRAV) / Math.sin(2 * angle));
+    //     // add multiplier
+    //     // vel = vel * mult;
+    //     if (vel < MAX_VEL)
+    //         return vel; // looking if velocity is lower max velocity
+    //     else
+    //         return -1; // -1 stands for error
+    // }
 
     public int convertToTalonVelocity(double metersPerSec) {
         //distance wheel spins each revolution
