@@ -96,7 +96,7 @@ public class Shooter2903 extends SubsystemBase {
     public double[] shootMath(double distance, double timeCorrect){
         double InitVel = InitVel(distance, timeCorrect);
         double Angle = Angle(distance, timeCorrect);
-        for(int a = 2; Angle > MAX_SHOOT_ANGLE || InitVel < MAX_VEL || a == 20; a++){
+        for(double a = 1.5; Angle > MAX_SHOOT_ANGLE && InitVel < MAX_VEL+5; a+=0.25){
             InitVel = InitVel(distance, timeCorrect/a); //dividing by a makes bigger velocity and smaller angle 
             Angle = Angle(distance, timeCorrect/a);
         }
