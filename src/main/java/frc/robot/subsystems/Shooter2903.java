@@ -16,7 +16,7 @@ public class Shooter2903 extends SubsystemBase {
     final double POWER_CELL_DIAMETER = 17.78; //cm
     final double ROBOT_SHOOTER_HEIGHT = 0.33782; //m
     final double GOAL_HEIGHT = 2.5 - ROBOT_SHOOTER_HEIGHT; //m
-    final double MAX_VEL = 111.5; // m/s
+    final double MAX_VEL = 50; // m/s
     final double MAX_SHOOT_ANGLE = 45; // degree
     final double GRAV = 9.80665; // m/s/s
     final double DEG_PER_REV = 360; //degrees per revolution
