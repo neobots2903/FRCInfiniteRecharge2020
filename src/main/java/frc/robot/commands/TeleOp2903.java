@@ -55,6 +55,15 @@ public class TeleOp2903 extends CommandBase {
             swerveDrive(50, 0, -DEGREES_TO_TURN, false);
             climb2903.RetractArm();
         }
+
+        if(Robot.robotContainer.opJoy.getRawButton(1)){
+            double distance = 0; //lidar distance later
+            Robot.robotContainer.shooterSubsystem.shooting(distance, 1);
+        }
+
+        double intakePower = -Robot.robotContainer.opJoy.getRawAxis(5);
+        Robot.robotContainer.shooterSubsystem.intake(intakePower);
+
     }
 
     
