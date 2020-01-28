@@ -46,6 +46,15 @@ public class TeleOp2903 extends CommandBase {
             Robot.robotContainer.climbSubsystem.ExtendArm();
             Robot.robotContainer.climbSubsystem.RetractArm();
         }
+
+        if(Robot.robotContainer.opJoy.getRawButton(1)){
+            double distance = 0; //lidar distance later
+            Robot.robotContainer.shooterSubsystem.shooting(distance, 1);
+        }
+
+        double intakePower = -Robot.robotContainer.opJoy.getRawAxis(5);
+        Robot.robotContainer.shooterSubsystem.intake(intakePower);
+
     }
 
     
