@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 
@@ -53,10 +54,20 @@ public class Shooter2903 extends SubsystemBase {
         shooterAngle.setSelectedSensorPosition(0);        
     }
 
-    public void shoot(double metersPerSec) {
+    public void shootSpeed(double metersPerSec) {
         double velocity = convertToTalonVelocity(metersPerSec); //calc power
         shooterWheelL.set(ControlMode.Velocity,velocity);
         shooterWheelR.set(ControlMode.Velocity,velocity);
+    }
+    public void shooting(double distance, double timeCorrect){
+        double[] data = shootMath(distance, timeCorrect);
+        if(data[0] == -1) SmartDashboard.putString("Error:", "velocity is to big");
+        if(data[1] == -1)SmartDashboard.putString("Error:", "angle is to big");
+        if(data[0] >= 0 && data[1] >= 0){
+            shootSpeed(data[0]);
+            setAngle(data[1]);
+        }
+        
     }
 
     public void setAngle(double angle) {
