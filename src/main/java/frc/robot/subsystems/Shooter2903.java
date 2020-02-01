@@ -71,7 +71,8 @@ public class Shooter2903 extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
-        shooterAngle.set(ControlMode.Position,angle);
+        double ticks = convertAngleToTicks(angle);
+        shooterAngle.set(ControlMode.Position,ticks);
     }
 
     public void intake(double power) {

@@ -15,7 +15,7 @@ package frc.robot;
  */
 public class RobotMap {
 
-    public static final int TBD = -1337;
+    public static final int TBD = -8888888;
     //Servos
 
     //Motors
@@ -23,6 +23,8 @@ public class RobotMap {
     public static final int shooterWheelR = TBD;
     public static final int shooterAngle = TBD;
     public static final int intake = TBD;
+
+    public static final int colorWheel = TBD;
 
     public static final int LeftFrontForward = TBD;
     public static final int LeftFrontTurn = TBD;

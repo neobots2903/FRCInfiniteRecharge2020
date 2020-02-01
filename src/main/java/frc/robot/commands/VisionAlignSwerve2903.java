@@ -34,9 +34,6 @@ public class VisionAlignSwerve2903 extends CommandBase {
     @Override
     public void initialize() {
         Robot.robotContainer.limelightSubsystem.setTargetMode();
-
-        if (SmartDashboard.getBoolean("Target Vision: Turn Only", true))
-            SmartDashboard.putBoolean("Target Vision: Turn Only", true);
     }
 
     @Override
@@ -68,10 +65,7 @@ public class VisionAlignSwerve2903 extends CommandBase {
 
         }
 
-        if (SmartDashboard.getBoolean("Target Vision: Turn Only", true))
-            Robot.robotContainer.swerveDriveSubsystem.swerveDrive(side, Math.atan2(0, side), 0, false);
-        else
-            Robot.robotContainer.swerveDriveSubsystem.swerveDrive(Math.sqrt(Math.pow(forward, 2)+Math.pow(side, 2)), 
+        Robot.robotContainer.swerveDriveSubsystem.swerveDrive(Math.sqrt(Math.pow(forward, 2)+Math.pow(side, 2)), 
             Math.atan2(forward, side), 0, false);
 
     }
