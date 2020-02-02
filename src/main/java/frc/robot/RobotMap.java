@@ -52,4 +52,7 @@ public class RobotMap {
     //Controllers
     public static final int driveJoy = TBD;
     public static final int opJoy = TBD;
+
+    //I2C
+    public static final int colorSensor = TBD;
 }

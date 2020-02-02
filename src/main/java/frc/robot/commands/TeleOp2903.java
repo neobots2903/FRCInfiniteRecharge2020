@@ -62,6 +62,14 @@ public class TeleOp2903 extends CommandBase {
 
         double intakePower = -Robot.robotContainer.opJoy.getRawAxis(5);
         Robot.robotContainer.shooterSubsystem.intake(intakePower);
+
+
+        if(Robot.robotContainer.opJoy.getRawButton(2)){
+            Robot.robotContainer.colorWheelSubsystem.spin(3);
+        }
+        if(Robot.robotContainer.opJoy.getRawButton(4)){
+            Robot.robotContainer.colorWheelSubsystem.spinToColor(0.75);
+        }
         
     }
 

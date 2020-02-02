@@ -61,9 +61,10 @@ public class Shooter2903 extends SubsystemBase {
     }
     public void shooting(double distance, double timeCorrect){
         double[] data = shootMath(distance, timeCorrect);
-        if(data[0] == -1) SmartDashboard.putString("Error:", "velocity is to big");
-        if(data[1] == -1)SmartDashboard.putString("Error:", "angle is to big");
+        if(data[0] == -1) SmartDashboard.putString("ShootError:", "velocity is to big");
+        if(data[1] == -1)SmartDashboard.putString("ShootError:", "angle is to big");
         if(data[0] >= 0 && data[1] >= 0){
+            SmartDashboard.putString("ShootError:", "none");
             shootSpeed(data[0]);
             setAngle(data[1]);
         }
