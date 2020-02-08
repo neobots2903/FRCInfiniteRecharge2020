@@ -56,7 +56,7 @@ public class TeleOp2903 extends CommandBase {
         }
 
         if(Robot.robotContainer.opJoy.getRawButton(1)){
-            double distance = 0; //lidar distance later
+            double distance = Robot.robotContainer.LIDAR_Lite2903.getDistance(); //lidar distance 
             Robot.robotContainer.shooterSubsystem.shooting(distance, 1);
         }
 

@@ -59,6 +59,13 @@ public class Shooter2903 extends SubsystemBase {
         shooterWheelL.set(ControlMode.Velocity,velocity);
         shooterWheelR.set(ControlMode.Velocity,velocity);
     }
+
+    /**
+     * Configures shooter to correct angle and speed with distance in m
+     * @param distance distance to the ports in m
+     * @param timeCorrect standard is 1 || decrease value for faster shoot || it decreases 
+     * time automatically when shoot is not possible with current time
+     */
     public void shooting(double distance, double timeCorrect){
         double[] data = shootMath(distance, timeCorrect);
         if(data[0] == -1) SmartDashboard.putString("ShootError:", "velocity is to big");

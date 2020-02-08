@@ -9,6 +9,8 @@ package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -22,6 +24,7 @@ import frc.robot.subsystems.Limelight2903;
 import frc.robot.subsystems.NavX2903;
 import frc.robot.subsystems.Shooter2903;
 import frc.robot.subsystems.SwerveDrive2903;
+import frc.robot.subsystems.LIDAR_Lite2903;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -43,6 +46,7 @@ public class RobotContainer {
     public final Limelight2903 limelightSubsystem = new Limelight2903();
     public final ArduinoLidar2903 lidarSubsystem = new ArduinoLidar2903();
     public final ColorWheel2903 colorWheelSubsystem = new ColorWheel2903();
+    public final LIDAR_Lite2903 LIDAR_Lite2903 = new LIDAR_Lite2903(new DigitalInput(0));
 
     private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
