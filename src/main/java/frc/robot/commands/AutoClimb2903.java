@@ -17,19 +17,22 @@ public class AutoClimb2903 extends CommandBase{
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        //Aim limelight up(attached to shooter)
-        setAngle(MAX_SHOOT_ANGLE); //45 degree angle
-        //Line up with climb bar and go forward until we are under it, UNIFINISHED
+        // //Aim limelight up(attached to shooter)
+        // setAngle(MAX_SHOOT_ANGLE); //45 degree angle
+        // //Line up with climb bar and go forward until we are under it, UNIFINISHED
         
-        //Speen around, locate the climb thing, go forward until we're under the bar?
+        // //Speen around, locate the climb thing, go forward until we're under the bar?
 
-        //angle slightly crooked with one arm on each side(Turn by DEGREES_TO_TURN)
-        swerveDrive(50, 0, DEGREES_TO_TURN, false);
-        climb2903.RaiseArms();
-        climb2903.ExtendArm();
-        //angle parallel with the bar to click in(Turn by -DEGREES_TO_TURN)
-        swerveDrive(50, 0, -DEGREES_TO_TURN, false);
-        climb2903.RetractArm();
+        // //angle slightly crooked with one arm on each side(Turn by DEGREES_TO_TURN)
+
+        // swerveDrive(50, 0, DEGREES_TO_TURN, false); //swerveDrive can not turn to a specific number of degrees.
+        //                                             //if you would like this functionality, 
+        //                                             //we would need to make a gyroTurn function.
+        // climb2903.RaiseArms();
+        // climb2903.ExtendArm();
+        // //angle parallel with the bar to click in(Turn by -DEGREES_TO_TURN)
+        // swerveDrive(50, 0, -DEGREES_TO_TURN, false);
+        // climb2903.RetractArm();
     }
 
     // Called every time the scheduler runs while the command is scheduled.

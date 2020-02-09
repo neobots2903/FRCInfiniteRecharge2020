@@ -14,15 +14,18 @@ public class Shooter2903 extends SubsystemBase {
      */
 
     final double POWER_CELL_WEIGHT = 0.142; // Kg
-    final double POWER_CELL_DIAMETER = 17.78; //cm
-    final double ROBOT_SHOOTER_HEIGHT = 0.33782; //m
-    final double GOAL_HEIGHT = 2.5 - ROBOT_SHOOTER_HEIGHT; //m
+    final double POWER_CELL_DIAMETER = 17.78; // cm
+    final double ROBOT_SHOOTER_HEIGHT = 0.33782; // m
+    final double GOAL_HEIGHT = 2.5 - ROBOT_SHOOTER_HEIGHT; // m
     final double MAX_VEL = 50; // m/s
-    final double MAX_SHOOT_ANGLE = 45; // degree
+    public final double MAX_SHOOT_ANGLE = 45; // degree
     final double GRAV = 9.80665; // m/s/s
-    final double DEG_PER_REV = 360; //degrees per revolution
-    final double TICKS_PER_REV = 4096; //ticks per revolution
-    final double MAX_LIMIT_ANGLE = 61.25; //highest degrees possible
+    final double DEG_PER_REV = 360; // degrees per revolution
+    final double TICKS_PER_REV = 4096; // ticks per revolution
+    final double MAX_LIMIT_ANGLE = 61.25; // highest degrees possible
+    final double PORT_DEPTH = 0.74295; // m
+    final double SPEED_ERROR = 1.5; // m/s
+    double lastSetSpeed = 0;
 
     WPI_TalonSRX shooterWheelL;
     WPI_TalonSRX shooterWheelR;
@@ -30,7 +33,6 @@ public class Shooter2903 extends SubsystemBase {
     WPI_TalonSRX intake;
     DigitalInput shooterAngleTopLimit;
     DigitalInput shooterAngleBottomLimit;
-
 
     public Shooter2903() {
         shooterWheelL = new WPI_TalonSRX(RobotMap.shooterWheelL);
@@ -47,17 +49,36 @@ public class Shooter2903 extends SubsystemBase {
     }
 
     public void zeroShooterAngle() {
-        while (!shooterAngleBottomLimit.get()){
+        while (!shooterAngleBottomLimit.get()) {
             shooterAngle.set(ControlMode.PercentOutput, -0.5);
         }
         shooterAngle.set(ControlMode.PercentOutput, 0);
-        shooterAngle.setSelectedSensorPosition(0);        
+        shooterAngle.setSelectedSensorPosition(0);
     }
 
     public void shootSpeed(double metersPerSec) {
-        double velocity = convertToTalonVelocity(metersPerSec); //calc power
-        shooterWheelL.set(ControlMode.Velocity,velocity);
-        shooterWheelR.set(ControlMode.Velocity,velocity);
+        lastSetSpeed = metersPerSec;
+        double velocity = convertToTalonVelocity(metersPerSec); // calc power
+        shooterWheelL.set(ControlMode.Velocity, velocity);
+        shooterWheelR.set(ControlMode.Velocity, velocity);
+    }
+
+    public void waitForTargetSpeed() {
+        while (Math.abs(lastSetSpeed - getCurrentSpeed()) > SPEED_ERROR) {
+            try {
+                wait(100);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public double getCurrentSpeed(){
+        double onemps = convertToTalonVelocity(1);
+        double currentTicksPerTenthSec = 
+        (shooterWheelL.getSelectedSensorVelocity()+shooterWheelR.getSelectedSensorVelocity())/2;
+        return currentTicksPerTenthSec/onemps;
     }
 
     /**
@@ -114,6 +135,7 @@ public class Shooter2903 extends SubsystemBase {
     }
 
     public double[] shootMath(double distance, double timeCorrect){
+        distance += PORT_DEPTH;
         double InitVel = InitVel(distance, timeCorrect);
         double Angle = Angle(distance, timeCorrect);
         for(double a = 1.5; Angle > MAX_SHOOT_ANGLE && InitVel < MAX_VEL+5; a+=0.25){

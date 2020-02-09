@@ -10,7 +10,6 @@ package frc.robot;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -60,6 +59,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         // Configure the button bindings
+        navXSubsystem.zero();
         configureButtonBindings();
     }
 

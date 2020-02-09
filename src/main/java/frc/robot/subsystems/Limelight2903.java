@@ -29,9 +29,9 @@ public class Limelight2903 extends SubsystemBase {
         setLight(false);
     }
     
-    public void setCargoMode() {
-        setLight(false);
-        table.getEntry("pipeline").setNumber(1); // sets cargo pipeline
+    public void setZoomMode() {
+        setLight(true);
+        table.getEntry("pipeline").setNumber(1); // sets zoom pipeline
     }
     
     public void setTargetMode() {

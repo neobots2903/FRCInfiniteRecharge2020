@@ -79,11 +79,11 @@ public class ArduinoLidar2903 extends SubsystemBase {
     public int getStatus(LidarPosition pos) { 
         if (noLidar) return 9;                  //if 0, distance is reliable
         updateData();                           //if 2, distance may be slightly off
-        if (pos == LidarPosition.Left)          //if anything else, distance is unreliable
+        if (pos == LidarPosition.LEFT)          //if anything else, distance is unreliable
             return leftStatus;
-        else if (pos == LidarPosition.Center)
+        else if (pos == LidarPosition.CENTER)
             return centerStatus;
-        else if (pos == LidarPosition.Right)
+        else if (pos == LidarPosition.RIGHT)
             return rightStatus;
         else
             return 0;

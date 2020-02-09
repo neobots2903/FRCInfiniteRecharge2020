@@ -109,6 +109,15 @@ public class SwerveDrive2903 extends SubsystemBase {
             setForward(power/5);
         }
     }
+    
+    public void swerveDriveDistance(double power, double angle, boolean fieldCentric, double distance){
+        LeftFront.zeroForwardEncoder();
+        RightRear.zeroForwardEncoder();
+        while((LeftFront.getForwardMeters() + RightRear.getForwardMeters())/2 < distance){
+            swerveDrive(power, angle, 0, fieldCentric);
+        }
+        swerveDrive(0, angle, 0, fieldCentric);
+    }
 
     public void TankDrive(double left, double right) {
         goToZero();

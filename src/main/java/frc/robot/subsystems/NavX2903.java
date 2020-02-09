@@ -23,6 +23,10 @@ public class NavX2903 extends SubsystemBase {
     return Robot.robotContainer.ahrs.getAngle();
   }
 
+  public void setBackwards(boolean isBackwards){
+    if(isBackwards)Robot.robotContainer.ahrs.setAngleAdjustment(180);
+  }
+
   public boolean isColliding() {
     collisionDetected = false;
     double curr_world_linear_accel_x = Robot.robotContainer.ahrs.getWorldLinearAccelX();

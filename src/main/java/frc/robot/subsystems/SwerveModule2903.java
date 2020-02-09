@@ -13,8 +13,11 @@ public class SwerveModule2903 {
   public CANSparkMax ForwardMotor;
   public WPI_TalonSRX TurnMotor;
   public DigitalInput limit;
-  final int TICKS_PER_REV = 4096*6;
+  final int TURN_TICKS_PER_REV = 4096*6;
+  final int FORWARD_TICKS_PER_REV = 42;
   final int DEG_PER_REV = 360;
+  final double FORWARD_WHEEL_DIAM = 0.1016; //m
+  final double FORWARD_WHEEL_CIRC = Math.PI*FORWARD_WHEEL_DIAM; //m
   public static final int kPIDLoopIdx = 0;
   public static final int kTimeoutMs = 30;
   private double turnDegPct = 0;
@@ -87,6 +90,18 @@ public class SwerveModule2903 {
     return TurnMotor.getSensorCollection().getQuadraturePosition();// % TICKS_PER_REV;
   }
 
+  public double getForwardTicks(){
+    return ForwardMotor.getEncoder().getPosition();
+  }
+
+  public void zeroForwardEncoder(){
+    ForwardMotor.getEncoder().setPosition(0);
+  }
+
+  public double getForwardMeters(){
+    return (getForwardTicks()/FORWARD_TICKS_PER_REV)*FORWARD_WHEEL_CIRC;
+  }
+
   public int getAbsoluteTurnTicks() {
     return TurnMotor.getSensorCollection().getPulseWidthPosition();// % TICKS_PER_REV;
   }
@@ -97,14 +112,14 @@ public class SwerveModule2903 {
 
   public int ticksToAngle (int ticks) {
     double remainder = ticks;// % TICKS_PER_REV;
-    remainder /= TICKS_PER_REV;
+    remainder /= TURN_TICKS_PER_REV;
     return (int)(remainder * DEG_PER_REV);
   }
 
   public int angleToTicks (int angle) {
     double remainder = angle;// % DEG_PER_REV;
     remainder /= DEG_PER_REV;
-    return (int)(remainder * TICKS_PER_REV);
+    return (int)(remainder * TURN_TICKS_PER_REV);
   }
 
   public void setPowerPercent(double val) {
