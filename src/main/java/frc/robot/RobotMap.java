@@ -42,8 +42,9 @@ public class RobotMap {
     public static final int LeftRearLimit = TBD;
 
     //Pneumatics
-    public static final int armRiser = TBD; //start with this actually
-    public static final int armExtend = TBD; //Do this one first
+    public static final int armExtend = TBD; 
+    public static final int armRiser = TBD; //Do this one first
+
    
     //Digital input output
     public static final int shooterAngleTopLimit = TBD;

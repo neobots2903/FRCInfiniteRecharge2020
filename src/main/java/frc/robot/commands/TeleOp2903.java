@@ -9,7 +9,8 @@ public class TeleOp2903 extends CommandBase {
     private boolean zeroLock = false;
     private boolean fieldCentric = false;
     final double MAX_SHOOT_ANGLE = r.shooterSubsystem.MAX_SHOOT_ANGLE; 
-    
+    boolean start_has_been_pressed=false;
+    boolean start_held=false;
     public TeleOp2903() {
         
     }
@@ -18,7 +19,6 @@ public class TeleOp2903 extends CommandBase {
     @Override
     public void initialize() {
         r.swerveDriveSubsystem.init();
-        
     }
     
     // Called every time the scheduler runs while the command is scheduled.
@@ -41,22 +41,24 @@ public class TeleOp2903 extends CommandBase {
         }
 
         r.swerveDriveSubsystem.swerveDrive(forward-backward, r.swerveDriveSubsystem.joystickAngle(x, y), turnX, fieldCentric);
-        
-        // if(Robot.robotContainer.opJoy.getRawButton(8)){
-        //     //Aim limelight up(attached to shooter)
-        //     r.shooterSubsystem.setAngle(MAX_SHOOT_ANGLE); //45 degree angle
-        //     //Line up with climb bar and go forward until we are under it, UNIFINISHED
-            
-        //     //Speen around, locate the climb thing, go forward until we're under the bar?
+       
+        if(Robot.robotContainer.opJoy.getRawButton(8) && !start_held ){
+            //Aim limelight up(attached to shooter)
+            //r.shooterSubsystem.setAngle(MAX_SHOOT_ANGLE); //45 degree angle
 
-        //     //angle slightly crooked with one arm on each side(Turn by DEGREES_TO_TURN)
-        //     swerveDrive(50, 0, DEGREES_TO_TURN, false);
-        //     climb2903.RaiseArms();
-        //     climb2903.ExtendArm();
-        //     //angle parallel with the bar to click in(Turn by -DEGREES_TO_TURN)
-        //     swerveDrive(50, 0, -DEGREES_TO_TURN, false);
-        //     climb2903.RetractArm();
-        // }
+            start_held = true; 
+
+            if(start_has_been_pressed){
+                r.climbSubsystem.RetractArm();
+
+            }else{
+                r.climbSubsystem.RaiseArms();
+                r.climbSubsystem.ExtendArm();
+            }
+
+        }else if (!r.opJoy.getRawButton(8)){
+            start_held = false;
+        }
 
         if(r.opJoy.getRawButton(1)){
             double distance = r.LIDAR_Lite2903.getDistance(); //lidar distance 
@@ -73,6 +75,8 @@ public class TeleOp2903 extends CommandBase {
         if(r.opJoy.getRawButton(4)){
             r.colorWheelSubsystem.spinToColor(0.75);
         }
+        
+
         
     }
 
