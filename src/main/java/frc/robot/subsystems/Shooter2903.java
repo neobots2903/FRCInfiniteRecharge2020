@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,6 +34,7 @@ public class Shooter2903 extends SubsystemBase {
     WPI_TalonSRX intake;
     DigitalInput shooterAngleTopLimit;
     DigitalInput shooterAngleBottomLimit;
+    AnalogInput intakeDetect;
 
     public Shooter2903() {
         shooterWheelL = new WPI_TalonSRX(RobotMap.shooterWheelL);
@@ -41,11 +43,16 @@ public class Shooter2903 extends SubsystemBase {
         intake = new WPI_TalonSRX(RobotMap.intake);
         shooterAngleTopLimit = new DigitalInput(RobotMap.shooterAngleTopLimit);
         shooterAngleBottomLimit = new DigitalInput(RobotMap.shooterAngleBottomLimit);
+        intakeDetect = new AnalogInput(RobotMap.intakeDetect);
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+    }
+
+    public boolean intakeDetect(){
+        if((intakeDetect.getVoltage()/2)/2.54 < 8) return true; else return false;
     }
 
     public void zeroShooterAngle() {

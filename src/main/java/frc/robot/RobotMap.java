@@ -49,6 +49,7 @@ public class RobotMap {
     //Digital input output
     public static final int shooterAngleTopLimit = TBD;
     public static final int shooterAngleBottomLimit = TBD;
+    
 
     //Controllers
     public static final int driveJoy = TBD;
@@ -56,4 +57,7 @@ public class RobotMap {
 
     //I2C
     public static final int colorSensor = TBD;
+
+    //Analog Input
+    public static final int intakeDetect = TBD;
 }

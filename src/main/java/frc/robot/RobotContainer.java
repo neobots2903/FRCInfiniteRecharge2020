@@ -9,6 +9,8 @@ package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -46,6 +48,8 @@ public class RobotContainer {
     public final ArduinoLidar2903 lidarSubsystem = new ArduinoLidar2903();
     public final ColorWheel2903 colorWheelSubsystem = new ColorWheel2903();
     public final LIDAR_Lite2903 LIDAR_Lite2903 = new LIDAR_Lite2903(new DigitalInput(0));
+    public static NetworkTableInstance ntinst;
+    public static NetworkTable tensorTable;
 
     private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -60,7 +64,10 @@ public class RobotContainer {
     public RobotContainer() {
         // Configure the button bindings
         navXSubsystem.zero();
+        ntinst = NetworkTableInstance.getDefault();  
+        tensorTable = ntinst.getTable("tensorflow");   
         configureButtonBindings();
+
     }
 
     /**

@@ -11,6 +11,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class AutoMain2903 extends CommandBase {
     final double TURN_ERROR = 3; // degree
     final RobotContainer r = Robot.robotContainer;
+    final double PIXEL_HEIGTH = 1080;
+    final double PIXEL_WIDTH = 1920;
+    final double PIXEL_ERROR = 5;
+    int cellCount = 0;
+   
 
     public AutoMain2903() {
 
@@ -25,7 +30,7 @@ public class AutoMain2903 extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        r.swerveDriveSubsystem.swerveDriveDistance(1, 180, false, 1.5);
+        if(cellCount == 0)r.swerveDriveSubsystem.swerveDriveDistance(1, 180, false, 1.5);
         r.limelightSubsystem.setZoomMode();
         while (r.limelightSubsystem.getTV() == 0) {
             r.swerveDriveSubsystem.swerveDrive(0.5, 180, 1, false);
@@ -47,8 +52,32 @@ public class AutoMain2903 extends CommandBase {
                 r.shooterSubsystem.intake(1);
             }
             r.shooterSubsystem.intake(0);
+        }
+        
+        cellCount = 0;
+        boolean isCellAtSensor = false;
+        while(cellCount < 3){
+            if(r.tensorTable.getEntry("EnergyCellCount").getDouble(0) > 0){
+                if(r.tensorTable.getEntry("EnergyCellX").getDouble(PIXEL_WIDTH/2) > (PIXEL_WIDTH/2)+PIXEL_ERROR)
+                r.swerveDriveSubsystem.swerveDrive(0.5, 0, 0.5, false);
+                else if(r.tensorTable.getEntry("EnergyCellX").getDouble(PIXEL_WIDTH/2) < (PIXEL_WIDTH/2)-PIXEL_ERROR)
+                r.swerveDriveSubsystem.swerveDrive(0.5, 0, -0.5, false);
+                
+            }
+            if(r.shooterSubsystem.intakeDetect())isCellAtSensor = true;
+            if(!r.shooterSubsystem.intakeDetect() && isCellAtSensor){
+                isCellAtSensor = false;
+                cellCount++;
+            }
+                
+        }
+        
+
+            
+        
+            
+
     }
-  }
 
   // Called once the command ends or is interrupted.
   @Override
