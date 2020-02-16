@@ -16,7 +16,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.AutoMain2903;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Spin2903;
 import frc.robot.subsystems.ArduinoLidar2903;
 import frc.robot.subsystems.Climb2903;
 import frc.robot.subsystems.ColorWheel2903;
@@ -48,10 +52,11 @@ public class RobotContainer {
     public final ArduinoLidar2903 lidarSubsystem = new ArduinoLidar2903();
     public final ColorWheel2903 colorWheelSubsystem = new ColorWheel2903();
     public final LIDAR_Lite2903 LIDAR_Lite2903 = new LIDAR_Lite2903(new DigitalInput(0));
+    private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
     public static NetworkTableInstance ntinst;
     public static NetworkTable tensorTable;
 
-    private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+    SendableChooser<Command> m_chooser = new SendableChooser<>();
 
     //public PIDController swervePower = new PIDController(0.1, 0, 0);
     //public PIDController swerveAngle = new PIDController(0.1, 0, 0);
@@ -67,7 +72,9 @@ public class RobotContainer {
         ntinst = NetworkTableInstance.getDefault();  
         tensorTable = ntinst.getTable("tensorflow");   
         configureButtonBindings();
-
+        m_chooser.setDefaultOption("Main Auto", new AutoMain2903());
+        m_chooser.addOption("Spiiiiinnnnn", new Spin2903());
+        SmartDashboard.putData("Auto mode", m_chooser);
     }
 
     /**
@@ -87,6 +94,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return m_autoCommand;
+        return m_chooser.getSelected();
     }
 }
