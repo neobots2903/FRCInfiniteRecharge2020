@@ -15,6 +15,8 @@ public class Limelight2903 extends SubsystemBase {
     public NetworkTableEntry ta; // Target Area (0% of image to 100% of image)
     public NetworkTableEntry tv; // Whether the limelight has any valid targets (0 or 1)
     public NetworkTableEntry ts; // Skew or rotation (-90 degrees to 0 degrees)
+    public NetworkTableEntry tvert; // Vertical sidelength of the rough bounding box (0 - 320 pixels)
+    public NetworkTableEntry thor; // Horizontal sidelength of the rough bounding box (0 - 320 pixels)
     
     public Limelight2903() {
         
@@ -26,6 +28,8 @@ public class Limelight2903 extends SubsystemBase {
         ta = table.getEntry("ta");
         tv = table.getEntry("tv");
         ts = table.getEntry("ts");
+        tvert = table.getEntry("tvert");
+        thor = table.getEntry("thor");
         setLight(false);
     }
     
@@ -76,6 +80,17 @@ public class Limelight2903 extends SubsystemBase {
         return value;
     }
 
+    public double getTVERT() {
+        double value = getEntryDouble(tvert);
+        SmartDashboard.putNumber("tvert", value);
+        return value;
+    }
+
+    public double getTHOR() {
+        double value = getEntryDouble(thor);
+        SmartDashboard.putNumber("thor", value);
+        return value;
+    }
   
 }
  
