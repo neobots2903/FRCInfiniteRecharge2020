@@ -15,25 +15,26 @@ package frc.robot;
  */
 public class RobotMap {
 
-    public static final int TBD = -8888888;
+    public static final int TBD = 0;
     //Servos
+    public static final int intakeDropper = 0;
 
     //Motors
-    public static final int shooterWheelL = TBD;
-    public static final int shooterWheelR = TBD;
-    public static final int shooterAngle = TBD;
-    public static final int intake = TBD;
+    public static final int shooterWheelL = 7;
+    public static final int shooterWheelR = 6;
+    public static final int shooterAngle = 40;
+    public static final int intake = 37;
 
     public static final int colorWheel = TBD;
 
-    public static final int LeftFrontForward = TBD;
-    public static final int LeftFrontTurn = TBD;
-    public static final int RightFrontForward = TBD;
-    public static final int RightFrontTurn = TBD;
-    public static final int RightRearForward = TBD;
-    public static final int RightRearTurn = TBD;
-    public static final int LeftRearForward = TBD;
-    public static final int LeftRearTurn = TBD;
+    public static final int LeftFrontForward = 23;
+    public static final int LeftFrontTurn = 1;
+    public static final int RightFrontForward = 20;
+    public static final int RightFrontTurn = 2;
+    public static final int RightRearForward = 21;
+    public static final int RightRearTurn = 31;
+    public static final int LeftRearForward = 22;
+    public static final int LeftRearTurn = 38;
 
     //Limit
     public static final int LeftFrontLimit = TBD;
@@ -42,8 +43,10 @@ public class RobotMap {
     public static final int LeftRearLimit = TBD;
 
     //Pneumatics
-    public static final int armExtend = TBD; 
-    public static final int armRiser = TBD; //Do this one first
+    public static final int armExtendOpen = 0; 
+    public static final int armExtendClose = 3; 
+    public static final int armRiserOpen = 1;
+    public static final int armRiserClose = 2;
 
    
     //Digital input output
@@ -52,8 +55,8 @@ public class RobotMap {
     
 
     //Controllers
-    public static final int driveJoy = TBD;
-    public static final int opJoy = TBD;
+    public static final int driveJoy = 0;
+    public static final int opJoy = 1;
 
     //I2C
     public static final int colorSensor = TBD;

@@ -22,10 +22,11 @@ public class SwerveDrive2903 extends SubsystemBase {
     final int DEG_PER_REV = 360;
     boolean isForward = true;
 
-    double deadzone = 0.5; // joystick isn't actually in center, making sure doesn't move when not touched :)
+    double joyDeadzone = 0.5; // joystick isn't actually in center, making sure doesn't move when not touched :)
+    double triggerDeadzone = 0.05;
     int targetAngle = 0;
 
-    public void init() {
+    public SwerveDrive2903() {
         LeftFront = new SwerveModule2903(RobotMap.LeftFrontForward, RobotMap.LeftFrontTurn, RobotMap.LeftFrontLimit);
         RightFront = new SwerveModule2903(RobotMap.RightFrontForward, RobotMap.RightFrontTurn, RobotMap.RightFrontLimit);
         RightRear = new SwerveModule2903(RobotMap.RightRearForward, RobotMap.RightRearTurn, RobotMap.RightRearLimit);
@@ -58,7 +59,7 @@ public class SwerveDrive2903 extends SubsystemBase {
 
     public int joystickAngle(double x, double y) {
         int angle = -1;
-        if (Math.abs(x) > deadzone || Math.abs(y) > deadzone) {
+        if (Math.abs(x) > joyDeadzone || Math.abs(y) > joyDeadzone) {
             angle = (int)Math.toDegrees(Math.atan2(x, y));
             if (angle < 0)
                 angle += 360;
@@ -77,7 +78,7 @@ public class SwerveDrive2903 extends SubsystemBase {
 
     public void setTurnDegrees(int degrees) {
         if (degrees == -1) return;
-        int currentTargetTic = (int)LeftFront.TurnMotor.getClosedLoopTarget()-LeftFront.getJoyTurnTicks(degrees);
+        int currentTargetTic = (int)LeftFront.TurnMotor.getClosedLoopTarget()-LeftFront.getLastJoyTurnTicks();
         int localTic = LeftFront.angleToTicks(degrees) - currentTargetTic % TICKS_PER_REV;
         if (localTic < -TICKS_PER_REV/2)
             localTic += TICKS_PER_REV;
@@ -105,8 +106,8 @@ public class SwerveDrive2903 extends SubsystemBase {
             targetAngle = (int)angle;
         setTurnDegrees((int)(targetAngle-((fieldCentric)?Robot.robotContainer.navXSubsystem.turnAngle():0)));
 
-        if (deadzone < Math.abs(power)) {
-            setForward(power/5);
+        if (triggerDeadzone < Math.abs(power)) {
+            setForward(power);
         }
     }
     

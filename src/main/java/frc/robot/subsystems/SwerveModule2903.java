@@ -22,11 +22,12 @@ public class SwerveModule2903 {
   public static final int kTimeoutMs = 30;
   private double turnDegPct = 0;
   private int turnDegOff = 0;
+  private int lastTurnTicks = 0;
 
   public SwerveModule2903(int forwardMotorId, int turnMotorId, int limitId) {
     ForwardMotor = new SafeCANSparkMax(forwardMotorId, MotorType.kBrushless);
     TurnMotor = new WPI_TalonSRX(turnMotorId);
-    limit = new DigitalInput(limitId);
+    //limit = new DigitalInput(limitId);
     TurnMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, kPIDLoopIdx, kTimeoutMs);
 
     TurnMotor.configPeakCurrentLimit(45, 0);
@@ -38,8 +39,8 @@ public class SwerveModule2903 {
     setEncoder(0);
 
     setPowerPercent(1); //set max turn power to just 100%;
-    TurnMotor.set(ControlMode.Position, getTurnTicks());
-    TurnMotor.config_kP(0, 0.3);
+    //TurnMotor.set(ControlMode.Position, getTurnTicks());
+    TurnMotor.config_kP(0, 0.75);
   }
 
   public boolean getLimit() {
@@ -78,12 +79,17 @@ public class SwerveModule2903 {
     turnDegPct = percent;
   }
 
+  public int getLastJoyTurnTicks() {
+    return lastTurnTicks;
+  }
+
   public int getJoyTurnTicks(double degrees) {
     double calc = turnDegOff-degrees;
     if (turnDegPct > 0) calc += 180;
     if (calc > 180) calc -= 360;
     else if (calc < -180) calc += 360;
-    return angleToTicks((int)(calc*Math.abs(turnDegPct)));
+    lastTurnTicks = angleToTicks((int)(calc*Math.abs(turnDegPct)));
+    return lastTurnTicks;
   }
 
   public int getTurnTicks() {
@@ -108,6 +114,10 @@ public class SwerveModule2903 {
 
   public int getTurnDegrees() {
     return ticksToAngle(getTurnTicks());
+  }
+
+  public int getAbsoluteTurnDegrees() {
+    return ticksToAngle(getTurnTicks()%TURN_TICKS_PER_REV);
   }
 
   public int ticksToAngle (int ticks) {

@@ -12,15 +12,18 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoMain2903;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Encoder2903;
 import frc.robot.commands.Spin2903;
+import frc.robot.commands.TeleOp2903;
 import frc.robot.subsystems.ArduinoLidar2903;
 import frc.robot.subsystems.Climb2903;
 import frc.robot.subsystems.ColorWheel2903;
@@ -40,19 +43,19 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
-    private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-    public final SwerveDrive2903 swerveDriveSubsystem = new SwerveDrive2903();
-    public final Climb2903 climbSubsystem = new Climb2903();
-    public final Shooter2903 shooterSubsystem = new Shooter2903();
-    public final AHRS ahrs = new AHRS();
-    public final NavX2903 navXSubsystem = new NavX2903();
-    public final Joystick driveJoy = new Joystick(RobotMap.driveJoy);
-    public final Joystick opJoy = new Joystick(RobotMap.opJoy);
-    public final Limelight2903 limelightSubsystem = new Limelight2903();
-    public final ArduinoLidar2903 lidarSubsystem = new ArduinoLidar2903();
-    public final ColorWheel2903 colorWheelSubsystem = new ColorWheel2903();
-    public final LIDAR_Lite2903 LIDAR_Lite2903 = new LIDAR_Lite2903(new DigitalInput(0));
-    private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+    public final Command teleopCommand;
+    public AHRS ahrs;
+    public final NavX2903 navXSubsystem;
+    public final ExampleSubsystem m_exampleSubsystem;
+    public final SwerveDrive2903 swerveDriveSubsystem;
+    public final Climb2903 climbSubsystem;
+    public final Shooter2903 shooterSubsystem;
+    public final Joystick driveJoy;
+    public final Joystick opJoy;
+    public final Limelight2903 limelightSubsystem;
+    public final ArduinoLidar2903 lidarSubsystem;
+    public final ColorWheel2903 colorWheelSubsystem;
+    public final LIDAR_Lite2903 LIDAR_Lite2903;
     public static NetworkTableInstance ntinst;
     public static NetworkTable tensorTable;
 
@@ -67,13 +70,36 @@ public class RobotContainer {
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        try {
+            /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
+            /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
+            /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
+            ahrs = new AHRS(Port.kMXP); 
+        } catch (RuntimeException ex ) {
+            DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
+        }
+
+        teleopCommand = new TeleOp2903(this);
+        navXSubsystem = new NavX2903(this);
+        m_exampleSubsystem = new ExampleSubsystem();
+        swerveDriveSubsystem = new SwerveDrive2903();
+        climbSubsystem = new Climb2903();
+        shooterSubsystem = new Shooter2903();
+        driveJoy = new Joystick(RobotMap.driveJoy);
+        opJoy = new Joystick(RobotMap.opJoy);
+        limelightSubsystem = new Limelight2903();
+        lidarSubsystem = new ArduinoLidar2903();
+        colorWheelSubsystem = new ColorWheel2903();
+        LIDAR_Lite2903 = new LIDAR_Lite2903(new DigitalInput(0));
+
         // Configure the button bindings
         navXSubsystem.zero();
         ntinst = NetworkTableInstance.getDefault();  
         tensorTable = ntinst.getTable("tensorflow");   
         configureButtonBindings();
         m_chooser.setDefaultOption("Main Auto", new AutoMain2903());
-        m_chooser.addOption("Spiiiiinnnnn", new Spin2903());
+        m_chooser.addOption("Spiiiiinnnnn", new Spin2903(this));
+        m_chooser.addOption("Encoder Reading", new Encoder2903(this));
         SmartDashboard.putData("Auto mode", m_chooser);
     }
 

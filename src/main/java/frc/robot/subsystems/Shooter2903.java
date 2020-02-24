@@ -1,10 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
@@ -16,6 +19,7 @@ public class Shooter2903 extends SubsystemBase {
 
     final double POWER_CELL_WEIGHT = 0.142; // Kg
     final double POWER_CELL_DIAMETER = 17.78; // cm
+    final double WHEEL_DIAMETER = 10.16; //cm
     final double ROBOT_SHOOTER_HEIGHT = 0.33782; // m
     final double GOAL_HEIGHT = 2.5 - ROBOT_SHOOTER_HEIGHT; // m
     final double MAX_VEL = 50; // m/s
@@ -23,15 +27,20 @@ public class Shooter2903 extends SubsystemBase {
     final double GRAV = 9.80665; // m/s/s
     final double DEG_PER_REV = 360; // degrees per revolution
     final double TICKS_PER_REV = 4096; // ticks per revolution
-    final double MAX_LIMIT_ANGLE = 61.25; // highest degrees possible
+    final double MAX_LIMIT_ANGLE = 57; // highest degrees possible
     final double PORT_DEPTH = 0.74295; // m
     final double SPEED_ERROR = 1.5; // m/s
+
+    public static final int kPIDLoopIdx = 0;
+    public static final int kTimeoutMs = 30;
+
     double lastSetSpeed = 0;
 
     WPI_TalonSRX shooterWheelL;
     WPI_TalonSRX shooterWheelR;
     WPI_TalonSRX shooterAngle;
     WPI_TalonSRX intake;
+    Servo intakeDropper;
     DigitalInput shooterAngleTopLimit;
     DigitalInput shooterAngleBottomLimit;
     AnalogInput intakeDetect;
@@ -41,14 +50,32 @@ public class Shooter2903 extends SubsystemBase {
         shooterWheelR = new WPI_TalonSRX(RobotMap.shooterWheelR);
         shooterAngle = new WPI_TalonSRX(RobotMap.shooterAngle);
         intake = new WPI_TalonSRX(RobotMap.intake);
-        shooterAngleTopLimit = new DigitalInput(RobotMap.shooterAngleTopLimit);
-        shooterAngleBottomLimit = new DigitalInput(RobotMap.shooterAngleBottomLimit);
-        intakeDetect = new AnalogInput(RobotMap.intakeDetect);
+        intakeDropper = new Servo(RobotMap.intakeDropper);
+        // shooterAngleTopLimit = new DigitalInput(RobotMap.shooterAngleTopLimit);
+        // shooterAngleBottomLimit = new DigitalInput(RobotMap.shooterAngleBottomLimit);
+        // intakeDetect = new AnalogInput(RobotMap.intakeDetect);
+        shooterWheelL.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, kPIDLoopIdx, kTimeoutMs);
+        shooterWheelR.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, kPIDLoopIdx, kTimeoutMs);
+        shooterAngle.configSelectedFeedbackSensor(FeedbackDevice.PulseWidthEncodedPosition, kPIDLoopIdx, kTimeoutMs);
+        shooterWheelL.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_100Ms);
+        shooterWheelR.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_100Ms);
+        shooterWheelL.config_kP(0, Double.MAX_VALUE);
+        shooterWheelR.config_kP(0, Double.MAX_VALUE);
+        shooterAngle.config_kP(0, 10);
+        shooterAngle.setSelectedSensorPosition(0);
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+    }
+
+    public void intakeOpen() {
+        intakeDropper.set(1);
+    }
+
+    public void intakeClose() {
+        intakeDropper.set(0);
     }
 
     public boolean intakeDetect(){
@@ -66,8 +93,14 @@ public class Shooter2903 extends SubsystemBase {
     public void shootSpeed(double metersPerSec) {
         lastSetSpeed = metersPerSec;
         double velocity = convertToTalonVelocity(metersPerSec); // calc power
+        SmartDashboard.putNumber("Target shoot speed", metersPerSec);
         shooterWheelL.set(ControlMode.Velocity, velocity);
-        shooterWheelR.set(ControlMode.Velocity, velocity);
+        // shooterWheelR.set(ControlMode.Velocity, velocity);
+    }
+
+    public void stopShoot() {
+        shooterWheelL.set(ControlMode.PercentOutput, 0);
+        shooterWheelR.set(ControlMode.PercentOutput, 0);
     }
 
     public void waitForTargetSpeed() {
@@ -81,11 +114,16 @@ public class Shooter2903 extends SubsystemBase {
         }
     }
 
+    public double getLeftSpeed() {
+        return convertToMetersPerSec(shooterWheelL.getSelectedSensorVelocity());
+    }
+
+    public double getRightSpeed() {
+        return convertToMetersPerSec(shooterWheelR.getSelectedSensorVelocity());
+    }
+
     public double getCurrentSpeed(){
-        double onemps = convertToTalonVelocity(1);
-        double currentTicksPerTenthSec = 
-        (shooterWheelL.getSelectedSensorVelocity()+shooterWheelR.getSelectedSensorVelocity())/2;
-        return currentTicksPerTenthSec/onemps;
+       return (getLeftSpeed() + getRightSpeed())/2;
     }
 
     /**
@@ -96,8 +134,8 @@ public class Shooter2903 extends SubsystemBase {
      */
     public void shooting(double distance, double timeCorrect){
         double[] data = shootMath(distance, timeCorrect);
-        if(data[0] == -1) SmartDashboard.putString("ShootError:", "velocity is to big");
-        if(data[1] == -1)SmartDashboard.putString("ShootError:", "angle is to big");
+        if(data[0] == -1) SmartDashboard.putString("ShootError:", "velocity is too big");
+        if(data[1] == -1)SmartDashboard.putString("ShootError:", "angle is too big");
         if(data[0] >= 0 && data[1] >= 0){
             SmartDashboard.putString("ShootError:", "none");
             shootSpeed(data[0]);
@@ -107,8 +145,19 @@ public class Shooter2903 extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
+        if (angle < 0) angle = 0;
+        if (angle > MAX_SHOOT_ANGLE) angle = MAX_SHOOT_ANGLE;
+        SmartDashboard.putNumber("Target shoot angle", angle);
         double ticks = convertAngleToTicks(angle);
         shooterAngle.set(ControlMode.Position,ticks);
+    }
+
+    public double getAngle(){
+        return convertTicksToAngle(getAngleTicks());
+    }
+
+    public int getAngleTicks() {
+        return shooterAngle.getSelectedSensorPosition();
     }
 
     public void intake(double power) {
@@ -182,7 +231,7 @@ public class Shooter2903 extends SubsystemBase {
 
     public int convertToTalonVelocity(double metersPerSec) {
         //distance wheel spins each revolution
-        double circumference = Math.PI * Math.pow(POWER_CELL_DIAMETER/2,2);
+        double circumference = Math.PI * Math.pow(WHEEL_DIAMETER/100/2,2);
         //ticks encoder counts per meter
         double ticksPerMeter = TICKS_PER_REV / circumference;
         //(m per sec) * (tick per m) = (tick per sec)
@@ -192,10 +241,29 @@ public class Shooter2903 extends SubsystemBase {
         return (int)ticksPerTenthSec;
     }
 
+    public double convertToMetersPerSec(double talonVelocity) {
+        double ticksPerTenthSec = talonVelocity;
+        //(ticks per tenth sec) * 10 = (tick per sec)
+        double ticksPerSec = ticksPerTenthSec*10;
+        //distance wheel spins each revolution
+        double circumference = Math.PI * Math.pow(WHEEL_DIAMETER/100/2,2);
+        //meters per ticks encoder count
+        double metersPerTick = circumference / TICKS_PER_REV;
+        //(ticks per sec) * (meters per tick) = (meters per sec)
+        double metersPerSecond = ticksPerSec * metersPerTick;
+        return metersPerSecond;
+    }
+
     public int convertAngleToTicks(double degrees) {
         double remainder = degrees;
         remainder /= DEG_PER_REV;
         return (int)(remainder * TICKS_PER_REV);
+    }
+
+    public int convertTicksToAngle(double ticks) {
+        double remainder = ticks;
+        remainder /= TICKS_PER_REV;
+        return (int)(remainder * DEG_PER_REV);
     }
 
 }

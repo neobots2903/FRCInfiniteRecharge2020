@@ -11,29 +11,37 @@ import frc.robot.RobotMap;
 
 public class Climb2903 extends SubsystemBase {
 
-    public Solenoid armRiser;
-    public Solenoid armExtend;
+    public Solenoid armRiserOpen;
+    public Solenoid armRiserClose;
+    public Solenoid armExtendOpen;
+    public Solenoid armExtendClose;
     
 
     public Climb2903() {
-        armRiser = new Solenoid(RobotMap.armRiser);
-        armExtend = new Solenoid(RobotMap.armExtend);
+        armRiserOpen = new Solenoid(RobotMap.armRiserOpen);
+        armRiserClose = new Solenoid(RobotMap.armRiserClose);
+        armExtendOpen = new Solenoid(RobotMap.armExtendOpen);
+        armExtendClose = new Solenoid(RobotMap.armExtendClose);
     }
 
     public void RaiseArms() {
-        armRiser.set(true);
+        armRiserOpen.set(true);
+        armRiserClose.set(false);
     }
 
     public void LowerArms() {
-        armRiser.set(false);
+        armRiserOpen.set(false);
+        armRiserClose.set(true);
     }
 
     public void ExtendArm() {
-        armExtend.set(true);
+        armExtendOpen.set(true);
+        armExtendClose.set(false);
     }
 
     public void RetractArm() {
-        armExtend.set(false);
+        armExtendOpen.set(false);
+        armExtendClose.set(true);
     }
 
     @Override

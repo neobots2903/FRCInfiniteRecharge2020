@@ -22,7 +22,7 @@ public class ColorWheel2903 extends SubsystemBase {
 
   public ColorWheel2903() {
     colorWheel = new WPI_TalonSRX(RobotMap.colorWheel);
-    colorSensor = new ColorSensorV3(Port.kMXP);
+    //colorSensor = new ColorSensorV3(Port.kMXP);
   }
 
   @Override
