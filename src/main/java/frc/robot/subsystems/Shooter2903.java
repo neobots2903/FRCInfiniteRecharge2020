@@ -231,7 +231,7 @@ public class Shooter2903 extends SubsystemBase {
 
     public int convertToTalonVelocity(double metersPerSec) {
         //distance wheel spins each revolution
-        double circumference = Math.PI * Math.pow(WHEEL_DIAMETER/100/2,2);
+        double circumference = Math.PI * WHEEL_DIAMETER/100;
         //ticks encoder counts per meter
         double ticksPerMeter = TICKS_PER_REV / circumference;
         //(m per sec) * (tick per m) = (tick per sec)
@@ -246,7 +246,7 @@ public class Shooter2903 extends SubsystemBase {
         //(ticks per tenth sec) * 10 = (tick per sec)
         double ticksPerSec = ticksPerTenthSec*10;
         //distance wheel spins each revolution
-        double circumference = Math.PI * Math.pow(WHEEL_DIAMETER/100/2,2);
+        double circumference = Math.PI * WHEEL_DIAMETER/100;
         //meters per ticks encoder count
         double metersPerTick = circumference / TICKS_PER_REV;
         //(ticks per sec) * (meters per tick) = (meters per sec)
