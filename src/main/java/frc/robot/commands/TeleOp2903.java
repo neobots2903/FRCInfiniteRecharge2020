@@ -8,6 +8,11 @@ public class TeleOp2903 extends CommandBase {
     final RobotContainer r;
     private boolean zeroLock = false;
     private boolean fieldCentric = false;
+    private boolean climbActive = false;
+    private boolean climbLock = false;
+    private boolean climbRaised = false;
+    private boolean climbExtend = false;
+    
     
     public TeleOp2903(RobotContainer robot) {
         r = robot;
@@ -86,6 +91,35 @@ public class TeleOp2903 extends CommandBase {
         double intakePower = -r.opJoy.getRawAxis(5);
         r.shooterSubsystem.intake(intakePower);
 
+        if(r.opJoy.getRawButton(8)){
+            if(!climbLock){
+                climbLock = true;
+                if(climbActive == true)climbActive = false;else climbActive = true;
+            }
+
+        }else{
+            climbLock = false;
+        }
+
+        if(r.opJoy.getRawButton(3) && climbActive){
+            if(!climbRaised){
+                r.climbSubsystem.RaiseArms();
+                climbRaised = true;
+            }
+        }
+
+        if(r.opJoy.getPOV()==0 && climbActive){
+            if(!climbExtend && climbRaised){
+                r.climbSubsystem.ExtendArm();
+                climbExtend = true;
+            }
+        }
+
+        if(r.opJoy.getPOV()==180 && climbActive){
+            if(climbExtend){
+                r.climbSubsystem.LowerArms();
+            }
+        }
 
         if(r.opJoy.getRawButton(2)){
             r.colorWheelSubsystem.spin(3);
