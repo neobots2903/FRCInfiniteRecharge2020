@@ -48,11 +48,11 @@ public class SwerveModule2903 {
   }
 
   public void zeroTurnMotor() {
-    while (!limit.get()) {
-      TurnMotor.set(ControlMode.PercentOutput, 1);
-      SmartDashboard.putBoolean("Init Limit", getLimit());
+    for (int i = 0; i < 2; i++) {
+      while (!getLimit())
+        TurnMotor.set(ControlMode.PercentOutput, (i==0) ? 1 : -0.25);
+      TurnMotor.set(ControlMode.PercentOutput, 0);
     }
-    TurnMotor.set(ControlMode.PercentOutput, 0);
     setEncoder(0);
   }
 

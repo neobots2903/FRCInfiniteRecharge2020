@@ -18,17 +18,19 @@ public class SwerveDrive2903 extends SubsystemBase {
 
     public List<SwerveModule2903> modules = new ArrayList<SwerveModule2903>();
 
-    final int TICKS_PER_REV = 4096*6;
+    final int TICKS_PER_REV = 4096 * 6;
     final int DEG_PER_REV = 360;
     boolean isForward = true;
 
-    double joyDeadzone = 0.5; // joystick isn't actually in center, making sure doesn't move when not touched :)
+    double joyDeadzone = 0.5; // joystick isn't actually in center, making sure doesn't move when not touched
+                              // :)
     double triggerDeadzone = 0.05;
     int targetAngle = 0;
 
     public SwerveDrive2903() {
         LeftFront = new SwerveModule2903(RobotMap.LeftFrontForward, RobotMap.LeftFrontTurn, RobotMap.LeftFrontLimit);
-        RightFront = new SwerveModule2903(RobotMap.RightFrontForward, RobotMap.RightFrontTurn, RobotMap.RightFrontLimit);
+        RightFront = new SwerveModule2903(RobotMap.RightFrontForward, RobotMap.RightFrontTurn,
+                RobotMap.RightFrontLimit);
         RightRear = new SwerveModule2903(RobotMap.RightRearForward, RobotMap.RightRearTurn, RobotMap.RightRearLimit);
         LeftRear = new SwerveModule2903(RobotMap.LeftRearForward, RobotMap.LeftRearTurn, RobotMap.LeftRearLimit);
 
@@ -44,8 +46,19 @@ public class SwerveDrive2903 extends SubsystemBase {
     }
 
     public void zeroModulesLimit() {
+        ArrayList<Thread> threads = new ArrayList<Thread>();
         for (SwerveModule2903 module : modules)
-            module.zeroTurnMotor();
+            threads.add(new Thread(() -> {
+                module.zeroTurnMotor();
+            }));
+        for (Thread thread : threads)
+            thread.start();
+        for (Thread thread : threads)
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
     }
 
     public void zeroModules() {

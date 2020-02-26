@@ -24,7 +24,6 @@ import frc.robot.commands.AutoMain2903;
 import frc.robot.commands.Encoder2903;
 import frc.robot.commands.Spin2903;
 import frc.robot.commands.TeleOp2903;
-import frc.robot.subsystems.ArduinoLidar2903;
 import frc.robot.subsystems.Climb2903;
 import frc.robot.subsystems.ColorWheel2903;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -53,7 +52,7 @@ public class RobotContainer {
     public final Joystick driveJoy;
     public final Joystick opJoy;
     public final Limelight2903 limelightSubsystem;
-    public final ArduinoLidar2903 lidarSubsystem;
+    //public final ArduinoLidar2903 lidarSubsystem;
     public final ColorWheel2903 colorWheelSubsystem;
     public final LIDAR_Lite2903 LIDAR_Lite2903;
     public static NetworkTableInstance ntinst;
@@ -88,9 +87,9 @@ public class RobotContainer {
         driveJoy = new Joystick(RobotMap.driveJoy);
         opJoy = new Joystick(RobotMap.opJoy);
         limelightSubsystem = new Limelight2903();
-        lidarSubsystem = new ArduinoLidar2903();
+        //lidarSubsystem = new ArduinoLidar2903();
         colorWheelSubsystem = new ColorWheel2903();
-        LIDAR_Lite2903 = new LIDAR_Lite2903(new DigitalInput(0));
+        LIDAR_Lite2903 = new LIDAR_Lite2903(new DigitalInput(RobotMap.LidarLiteV3));
 
         // Configure the button bindings
         navXSubsystem.zero();

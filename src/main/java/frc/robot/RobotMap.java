@@ -36,12 +36,6 @@ public class RobotMap {
     public static final int LeftRearForward = 22;
     public static final int LeftRearTurn = 38;
 
-    //Limit
-    public static final int LeftFrontLimit = TBD;
-    public static final int RightFrontLimit = TBD;
-    public static final int RightRearLimit = TBD;
-    public static final int LeftRearLimit = TBD;
-
     //Pneumatics
     public static final int armExtendOpen = 0; 
     public static final int armExtendClose = 3; 
@@ -52,6 +46,11 @@ public class RobotMap {
     //Digital input output
     public static final int shooterAngleTopLimit = TBD;
     public static final int shooterAngleBottomLimit = TBD;
+    public static final int LidarLiteV3 = 0;
+    public static final int LeftFrontLimit = 1;
+    public static final int RightFrontLimit = 2;
+    public static final int RightRearLimit = 3;
+    public static final int LeftRearLimit = 4;
     
 
     //Controllers

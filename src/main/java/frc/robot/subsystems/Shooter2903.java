@@ -61,7 +61,7 @@ public class Shooter2903 extends SubsystemBase {
         shooterWheelR.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_100Ms);
         shooterWheelL.config_kP(0, Double.MAX_VALUE);
         shooterWheelR.config_kP(0, Double.MAX_VALUE);
-        shooterAngle.config_kP(0, 10);
+        shooterAngle.config_kP(0, 2);
         shooterAngle.setSelectedSensorPosition(0);
     }
 
@@ -95,7 +95,7 @@ public class Shooter2903 extends SubsystemBase {
         double velocity = convertToTalonVelocity(metersPerSec); // calc power
         SmartDashboard.putNumber("Target shoot speed", metersPerSec);
         shooterWheelL.set(ControlMode.Velocity, velocity);
-        // shooterWheelR.set(ControlMode.Velocity, velocity);
+        shooterWheelR.set(ControlMode.Velocity, velocity);
     }
 
     public void stopShoot() {
