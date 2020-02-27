@@ -30,6 +30,11 @@ public class Encoder2903 extends CommandBase {
         SmartDashboard.putNumber("RF Deg", r.swerveDriveSubsystem.RightFront.getAbsoluteTurnDegrees());
         SmartDashboard.putNumber("RR Deg", r.swerveDriveSubsystem.RightRear.getAbsoluteTurnDegrees());
 
+        SmartDashboard.putBoolean("LF on zero?", r.swerveDriveSubsystem.LeftFront.getLimit());
+        SmartDashboard.putBoolean("LR on zero?", r.swerveDriveSubsystem.LeftRear.getLimit());
+        SmartDashboard.putBoolean("RF on zero?", r.swerveDriveSubsystem.RightFront.getLimit());
+        SmartDashboard.putBoolean("RR on zero?", r.swerveDriveSubsystem.RightRear.getLimit());
+
         SmartDashboard.putNumber("LF FW M", r.swerveDriveSubsystem.LeftFront.getForwardMeters());
         SmartDashboard.putNumber("LR FW M", r.swerveDriveSubsystem.LeftRear.getForwardMeters());
         SmartDashboard.putNumber("RF FW M", r.swerveDriveSubsystem.RightFront.getForwardMeters());
@@ -39,6 +44,9 @@ public class Encoder2903 extends CommandBase {
         SmartDashboard.putNumber("Shooter Speed", r.shooterSubsystem.getCurrentSpeed());
         SmartDashboard.putNumber("Shooter Speed Left", r.shooterSubsystem.getLeftSpeed());
         SmartDashboard.putNumber("Shooter Speed Right", r.shooterSubsystem.getRightSpeed());
+
+        SmartDashboard.putNumber("Lidar Distance", r.LIDAR_Lite2903.getDistance());
+        SmartDashboard.putNumber("Gyro Angle", r.navXSubsystem.turnAngle());
     }
 
     @Override

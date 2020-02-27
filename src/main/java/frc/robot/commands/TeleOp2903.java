@@ -2,11 +2,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.RobotContainer;
 
 public class TeleOp2903 extends CommandBase {
     final RobotContainer r;
     private boolean zeroLock = false;
+    private boolean oneLock = false;
+    private boolean autoAim = false;
     private boolean fieldCentric = false;
     private boolean climbActive = false;
     private boolean climbLock = false;
@@ -21,6 +24,8 @@ public class TeleOp2903 extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        r.limelightSubsystem.setLight(false);
+        r.limelightSubsystem.setTargetMode();
         r.swerveDriveSubsystem.zeroModulesLimit();
     }
     
@@ -29,8 +34,10 @@ public class TeleOp2903 extends CommandBase {
     public void execute() {
         double y = -r.driveJoy.getRawAxis(1);
         double x = r.driveJoy.getRawAxis(0);
-        double forward = r.driveJoy.getRawAxis(2);
-        double backward = r.driveJoy.getRawAxis(3);
+        // double forward = r.driveJoy.getRawAxis(2);
+        // double backward = r.driveJoy.getRawAxis(3);
+        double forward = 0;
+        double backward = r.swerveDriveSubsystem.joystickMag(x, y);
         double turnX = r.driveJoy.getRawAxis(4);
         if(Math.abs(turnX) < 0.01)turnX = 0;
 
@@ -48,6 +55,11 @@ public class TeleOp2903 extends CommandBase {
         SmartDashboard.putNumber("RF Amp", r.swerveDriveSubsystem.RightFront.TurnMotor.getStatorCurrent());
         SmartDashboard.putNumber("RR Amp", r.swerveDriveSubsystem.RightRear.TurnMotor.getStatorCurrent());
 
+        SmartDashboard.putBoolean("LF on zero?", r.swerveDriveSubsystem.LeftFront.getLimit());
+        SmartDashboard.putBoolean("LR on zero?", r.swerveDriveSubsystem.LeftRear.getLimit());
+        SmartDashboard.putBoolean("RF on zero?", r.swerveDriveSubsystem.RightFront.getLimit());
+        SmartDashboard.putBoolean("RR on zero?", r.swerveDriveSubsystem.RightRear.getLimit());
+
         SmartDashboard.putNumber("LF Deg", r.swerveDriveSubsystem.LeftFront.getAbsoluteTurnDegrees());
         SmartDashboard.putNumber("LR Deg", r.swerveDriveSubsystem.LeftRear.getAbsoluteTurnDegrees());
         SmartDashboard.putNumber("RF Deg", r.swerveDriveSubsystem.RightFront.getAbsoluteTurnDegrees());
@@ -59,28 +71,25 @@ public class TeleOp2903 extends CommandBase {
         SmartDashboard.putNumber("RR FW M", r.swerveDriveSubsystem.RightRear.getForwardMeters());
 
         SmartDashboard.putNumber("Shooter Angle", r.shooterSubsystem.getAngle());
+        SmartDashboard.putNumber("Shooter Angle Ticks", r.shooterSubsystem.getAngleTicks());
         SmartDashboard.putNumber("Shooter Speed", r.shooterSubsystem.getCurrentSpeed());
+        SmartDashboard.putNumber("Shooter Speed Left", r.shooterSubsystem.getLeftSpeed());
+        SmartDashboard.putNumber("Shooter Speed Right", r.shooterSubsystem.getRightSpeed());
 
         SmartDashboard.putNumber("Lidar Distance", r.LIDAR_Lite2903.getDistance());
         SmartDashboard.putNumber("Gyro Angle", r.navXSubsystem.turnAngle());
 
+        SmartDashboard.putBoolean("Auto aim?", autoAim);
+        SmartDashboard.putString("Climber State:", "Unknown sorry");
+
+        if (autoAim && r.limelightSubsystem.getTV() == 1) {
+            r.limelightSubsystem.setLight(true);
+            turnX = MathUtil.clamp(r.visionTurn.calculate(r.limelightSubsystem.getTX(), 0),-1,1);
+        } else {
+            r.limelightSubsystem.setLight(false);
+        }
+
         r.swerveDriveSubsystem.swerveDrive(forward-backward, r.swerveDriveSubsystem.joystickAngle(x, y), turnX, fieldCentric);
-
-        // if(Robot.robotContainer.opJoy.getRawButton(8)){
-        //     //Aim limelight up(attached to shooter)
-        //     r.shooterSubsystem.setAngle(MAX_SHOOT_ANGLE); //45 degree angle
-        //     //Line up with climb bar and go forward until we are under it, UNIFINISHED
-            
-        //     //Speen around, locate the climb thing, go forward until we're under the bar?
-
-        //     //angle slightly crooked with one arm on each side(Turn by DEGREES_TO_TURN)
-        //     swerveDrive(50, 0, DEGREES_TO_TURN, false);
-        //     climb2903.RaiseArms();
-        //     climb2903.ExtendArm();
-        //     //angle parallel with the bar to click in(Turn by -DEGREES_TO_TURN)
-        //     swerveDrive(50, 0, -DEGREES_TO_TURN, false);
-        //     climb2903.RetractArm();
-        // }
 
         if(r.opJoy.getRawButton(1)){
             double distance = r.LIDAR_Lite2903.getDistance(); //lidar distance 
@@ -122,11 +131,20 @@ public class TeleOp2903 extends CommandBase {
             }
         }
 
+        // if(r.opJoy.getRawButton(2)){
+        //     r.colorWheelSubsystem.spin(3);
+        // }
+        // if(r.opJoy.getRawButton(4)){
+        //     r.colorWheelSubsystem.spinToColor(0.75);
+        // }
+
         if(r.opJoy.getRawButton(2)){
-            r.colorWheelSubsystem.spin(3);
-        }
-        if(r.opJoy.getRawButton(4)){
-            r.colorWheelSubsystem.spinToColor(0.75);
+            if(!oneLock){
+                autoAim = !autoAim;
+                oneLock = true;
+            }else{
+                oneLock = false;
+            }
         }
         
     }

@@ -61,7 +61,11 @@ public class Shooter2903 extends SubsystemBase {
         shooterWheelR.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_100Ms);
         shooterWheelL.config_kP(0, Double.MAX_VALUE);
         shooterWheelR.config_kP(0, Double.MAX_VALUE);
-        shooterAngle.config_kP(0, 2);
+        // shooterWheelL.configPeakOutputForward(1);
+        // shooterWheelR.configPeakOutputForward(0);
+        // shooterWheelL.configPeakOutputReverse(0);
+        // shooterWheelR.configPeakOutputReverse(1);
+        shooterAngle.config_kP(0, 4.5);
         shooterAngle.setSelectedSensorPosition(0);
     }
 
@@ -95,7 +99,7 @@ public class Shooter2903 extends SubsystemBase {
         double velocity = convertToTalonVelocity(metersPerSec); // calc power
         SmartDashboard.putNumber("Target shoot speed", metersPerSec);
         shooterWheelL.set(ControlMode.Velocity, velocity);
-        shooterWheelR.set(ControlMode.Velocity, velocity);
+        shooterWheelR.set(ControlMode.Velocity, -velocity);
     }
 
     public void stopShoot() {
@@ -119,7 +123,7 @@ public class Shooter2903 extends SubsystemBase {
     }
 
     public double getRightSpeed() {
-        return convertToMetersPerSec(shooterWheelR.getSelectedSensorVelocity());
+        return -convertToMetersPerSec(shooterWheelR.getSelectedSensorVelocity());
     }
 
     public double getCurrentSpeed(){
@@ -150,6 +154,7 @@ public class Shooter2903 extends SubsystemBase {
         SmartDashboard.putNumber("Target shoot angle", angle);
         double ticks = convertAngleToTicks(angle);
         shooterAngle.set(ControlMode.Position,ticks);
+        SmartDashboard.putNumber("Target shoot angle ticks", ticks);
     }
 
     public double getAngle(){

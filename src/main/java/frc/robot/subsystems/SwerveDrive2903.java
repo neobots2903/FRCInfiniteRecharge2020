@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
@@ -22,9 +23,9 @@ public class SwerveDrive2903 extends SubsystemBase {
     final int DEG_PER_REV = 360;
     boolean isForward = true;
 
-    double joyDeadzone = 0.5; // joystick isn't actually in center, making sure doesn't move when not touched
+    double joyDeadzone = 0.1; // joystick isn't actually in center, making sure doesn't move when not touched
                               // :)
-    double triggerDeadzone = 0.05;
+    double triggerDeadzone = 0.1;
     int targetAngle = 0;
 
     public SwerveDrive2903() {
@@ -46,6 +47,7 @@ public class SwerveDrive2903 extends SubsystemBase {
     }
 
     public void zeroModulesLimit() {
+        SmartDashboard.putBoolean("Zeroin'",true);
         ArrayList<Thread> threads = new ArrayList<Thread>();
         for (SwerveModule2903 module : modules)
             threads.add(new Thread(() -> {
@@ -59,6 +61,7 @@ public class SwerveDrive2903 extends SubsystemBase {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        SmartDashboard.putBoolean("Zeroin'",false);
     }
 
     public void zeroModules() {

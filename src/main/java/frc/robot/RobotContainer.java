@@ -60,10 +60,8 @@ public class RobotContainer {
 
     SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-    //public PIDController swervePower = new PIDController(0.1, 0, 0);
-    //public PIDController swerveAngle = new PIDController(0.1, 0, 0);
-    public PIDController visionStrafe = new PIDController(0.1, 0, 0);
     public PIDController visionTurn = new PIDController(0.1, 0, 0);
+    public final int visionTurnError = 5;
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -90,6 +88,11 @@ public class RobotContainer {
         //lidarSubsystem = new ArduinoLidar2903();
         colorWheelSubsystem = new ColorWheel2903();
         LIDAR_Lite2903 = new LIDAR_Lite2903(new DigitalInput(RobotMap.LidarLiteV3));
+
+        visionTurn.setTolerance(visionTurnError);
+        visionTurn.disableContinuousInput();
+
+        limelightSubsystem.setLight(false);
 
         // Configure the button bindings
         navXSubsystem.zero();

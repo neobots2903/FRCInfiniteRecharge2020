@@ -27,7 +27,7 @@ public class SwerveModule2903 {
   public SwerveModule2903(int forwardMotorId, int turnMotorId, int limitId) {
     ForwardMotor = new SafeCANSparkMax(forwardMotorId, MotorType.kBrushless);
     TurnMotor = new WPI_TalonSRX(turnMotorId);
-    //limit = new DigitalInput(limitId);
+    limit = new DigitalInput(limitId);
     TurnMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, kPIDLoopIdx, kTimeoutMs);
 
     TurnMotor.configPeakCurrentLimit(45, 0);
@@ -50,7 +50,7 @@ public class SwerveModule2903 {
   public void zeroTurnMotor() {
     for (int i = 0; i < 2; i++) {
       while (!getLimit())
-        TurnMotor.set(ControlMode.PercentOutput, (i==0) ? 1 : -0.25);
+        TurnMotor.set(ControlMode.PercentOutput, (i==0) ? 0.8 : -0.25);
       TurnMotor.set(ControlMode.PercentOutput, 0);
     }
     setEncoder(0);

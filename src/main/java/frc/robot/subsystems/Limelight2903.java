@@ -19,10 +19,6 @@ public class Limelight2903 extends SubsystemBase {
     public NetworkTableEntry thor; // Horizontal sidelength of the rough bounding box (0 - 320 pixels)
     
     public Limelight2903() {
-        
-    }
-
-    public void init() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         tx = table.getEntry("tx");
         ta = table.getEntry("ta");
@@ -34,12 +30,10 @@ public class Limelight2903 extends SubsystemBase {
     }
     
     public void setZoomMode() {
-        setLight(true);
         table.getEntry("pipeline").setNumber(1); // sets zoom pipeline
     }
     
     public void setTargetMode() {
-        setLight(true);
         table.getEntry("pipeline").setNumber(0); // sets vision target pipeline
     }
     
