@@ -9,9 +9,9 @@ public class TeleOp2903 extends CommandBase {
     final RobotContainer r;
     private boolean zeroLock = false;
     private boolean oneLock = false;
+    private boolean twoLock = false;
     private boolean autoAim = false;
     private boolean fieldCentric = false;
-    private boolean climbActive = false;
     private boolean climbLock = false;
     private boolean climbRaised = false;
     private boolean climbExtend = false;
@@ -24,9 +24,19 @@ public class TeleOp2903 extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        r.sensorTable.getEntry("videoRecord").setBoolean(true);
+        r.swerveDriveSubsystem.stopDrive();
         r.limelightSubsystem.setLight(false);
         r.limelightSubsystem.setTargetMode();
         r.swerveDriveSubsystem.zeroModulesLimit();
+        // r.swerveDriveSubsystem.zeroModules();
+        r.climbSubsystem.RetractArm();
+        r.climbSubsystem.LowerArms();
+        climbRaised = false;
+        climbExtend = false;
+        r.shooterSubsystem.zeroShooterAngle();
+        r.shooterSubsystem.intakeOpen();
+        r.shooterSubsystem.shooterLock();
     }
     
     // Called every time the scheduler runs while the command is scheduled.
@@ -34,10 +44,10 @@ public class TeleOp2903 extends CommandBase {
     public void execute() {
         double y = -r.driveJoy.getRawAxis(1);
         double x = r.driveJoy.getRawAxis(0);
-        // double forward = r.driveJoy.getRawAxis(2);
-        // double backward = r.driveJoy.getRawAxis(3);
-        double forward = 0;
-        double backward = r.swerveDriveSubsystem.joystickMag(x, y);
+        double forward = r.driveJoy.getRawAxis(2);
+        double backward = r.driveJoy.getRawAxis(3);
+        // double forward = 0;
+        // double backward = r.swerveDriveSubsystem.joystickMag(x, y);
         double turnX = r.driveJoy.getRawAxis(4);
         if(Math.abs(turnX) < 0.01)turnX = 0;
 
@@ -50,10 +60,20 @@ public class TeleOp2903 extends CommandBase {
             }
         }
 
+        if(r.driveJoy.getRawButton(4)){
+            if(!twoLock){
+                r.swerveDriveSubsystem.zeroModulesLimit();
+                twoLock = true;
+            }else{
+                twoLock = false;
+            }
+        }
+
         SmartDashboard.putNumber("LF Amp", r.swerveDriveSubsystem.LeftFront.TurnMotor.getStatorCurrent());
         SmartDashboard.putNumber("LR Amp", r.swerveDriveSubsystem.LeftRear.TurnMotor.getStatorCurrent());
         SmartDashboard.putNumber("RF Amp", r.swerveDriveSubsystem.RightFront.TurnMotor.getStatorCurrent());
         SmartDashboard.putNumber("RR Amp", r.swerveDriveSubsystem.RightRear.TurnMotor.getStatorCurrent());
+        SmartDashboard.putNumber("Angle Amp", r.shooterSubsystem.getAngleCurrent());
 
         SmartDashboard.putBoolean("LF on zero?", r.swerveDriveSubsystem.LeftFront.getLimit());
         SmartDashboard.putBoolean("LR on zero?", r.swerveDriveSubsystem.LeftRear.getLimit());
@@ -76,6 +96,9 @@ public class TeleOp2903 extends CommandBase {
         SmartDashboard.putNumber("Shooter Speed Left", r.shooterSubsystem.getLeftSpeed());
         SmartDashboard.putNumber("Shooter Speed Right", r.shooterSubsystem.getRightSpeed());
 
+        SmartDashboard.putBoolean("Shooter top", r.shooterSubsystem.getTop());
+        SmartDashboard.putBoolean("Shooter bottom", r.shooterSubsystem.getBottom());
+
         SmartDashboard.putNumber("Lidar Distance", r.LIDAR_Lite2903.getDistance());
         SmartDashboard.putNumber("Gyro Angle", r.navXSubsystem.turnAngle());
 
@@ -90,6 +113,7 @@ public class TeleOp2903 extends CommandBase {
         }
 
         r.swerveDriveSubsystem.swerveDrive(forward-backward, r.swerveDriveSubsystem.joystickAngle(x, y), turnX, fieldCentric);
+        //r.swerveDriveSubsystem.ArcadeDrive(y, turnX);
 
         if(r.opJoy.getRawButton(1)){
             double distance = r.LIDAR_Lite2903.getDistance(); //lidar distance 
@@ -98,36 +122,34 @@ public class TeleOp2903 extends CommandBase {
             r.shooterSubsystem.stopShoot();
         }
 
+        r.shooterSubsystem.checkShootLimits();
+
         double intakePower = -r.opJoy.getRawAxis(5);
         r.shooterSubsystem.intake(intakePower);
 
         if(r.opJoy.getRawButton(8)){
-            if(!climbLock){
-                climbLock = true;
-                if(climbActive == true)climbActive = false;else climbActive = true;
-            }
-
+            climbLock = true;
         }else{
             climbLock = false;
         }
 
-        if(r.opJoy.getRawButton(3) && climbActive){
+        if(r.opJoy.getRawButton(3) && climbLock){
             if(!climbRaised){
                 r.climbSubsystem.RaiseArms();
                 climbRaised = true;
             }
         }
 
-        if(r.opJoy.getPOV()==0 && climbActive){
+        if(r.opJoy.getPOV()==0 && climbLock){
             if(!climbExtend && climbRaised){
                 r.climbSubsystem.ExtendArm();
                 climbExtend = true;
             }
         }
 
-        if(r.opJoy.getPOV()==180 && climbActive){
+        if(r.opJoy.getPOV()==180 && climbLock){
             if(climbExtend){
-                r.climbSubsystem.LowerArms();
+                r.climbSubsystem.RetractArm();
             }
         }
 
@@ -138,7 +160,7 @@ public class TeleOp2903 extends CommandBase {
         //     r.colorWheelSubsystem.spinToColor(0.75);
         // }
 
-        if(r.opJoy.getRawButton(2)){
+        if(r.driveJoy.getRawButton(2)){
             if(!oneLock){
                 autoAim = !autoAim;
                 oneLock = true;
@@ -146,13 +168,27 @@ public class TeleOp2903 extends CommandBase {
                 oneLock = false;
             }
         }
+
+        if (r.opJoy.getRawButton(4)) {
+            r.shooterSubsystem.setAngle(45);
+            r.shooterSubsystem.shootSpeed(10);
+        }
+
+        if(r.opJoy.getRawButton(5)){
+            r.shooterSubsystem.shooterUnlock();
+        }
+
+        if(r.opJoy.getRawButton(6)){
+            r.shooterSubsystem.shooterLock();
+        }
         
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-
+        r.shooterSubsystem.intakeClose();
+        r.sensorTable.getEntry("videoRecord").setBoolean(false);
     }
   
     // Returns true when the command should end.

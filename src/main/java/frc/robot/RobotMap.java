@@ -17,7 +17,8 @@ public class RobotMap {
 
     public static final int TBD = 0;
     //Servos
-    public static final int intakeDropper = 0;
+    public static final int intakeDropper = 1;
+    public static final int shooterBlock = 0;
 
     //Motors
     public static final int shooterWheelL = 7;
@@ -29,6 +30,7 @@ public class RobotMap {
 
     public static final int LeftFrontForward = 23;
     public static final int LeftFrontTurn = 1;
+
     public static final int RightFrontForward = 20;
     public static final int RightFrontTurn = 2;
     public static final int RightRearForward = 21;
@@ -37,20 +39,21 @@ public class RobotMap {
     public static final int LeftRearTurn = 38;
 
     //Pneumatics
-    public static final int armExtendOpen = 0; 
-    public static final int armExtendClose = 3; 
-    public static final int armRiserOpen = 1;
-    public static final int armRiserClose = 2;
+    public static final int armExtendOpen = 2; 
+    public static final int armExtendClose = 1; 
+    public static final int armRiserOpen = 3;
+    public static final int armRiserClose = 0;
 
    
     //Digital input output
-    public static final int shooterAngleTopLimit = TBD;
-    public static final int shooterAngleBottomLimit = TBD;
+    
     public static final int LidarLiteV3 = 0;
     public static final int LeftFrontLimit = 1;
     public static final int RightFrontLimit = 2;
     public static final int RightRearLimit = 3;
     public static final int LeftRearLimit = 4;
+    public static final int shooterAngleTopLimit = 6;
+    public static final int shooterAngleBottomLimit = 5;
     
 
     //Controllers

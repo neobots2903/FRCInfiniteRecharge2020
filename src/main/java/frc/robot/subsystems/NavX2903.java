@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Super intense gyro thing
@@ -20,6 +22,12 @@ public class NavX2903 extends SubsystemBase {
 
   public NavX2903(RobotContainer r) {
     this.r = r;
+    ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+    exec.scheduleAtFixedRate(new Runnable() {
+           public void run() {
+                r.sensorTable.getEntry("yaw").setDouble(turnAngle());
+           }
+       }, 0, 1000/25, TimeUnit.MILLISECONDS); // execute every 60 seconds
   }
 
   public void zero() {

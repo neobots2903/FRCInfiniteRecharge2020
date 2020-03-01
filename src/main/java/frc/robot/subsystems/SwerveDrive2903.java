@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
@@ -47,26 +50,51 @@ public class SwerveDrive2903 extends SubsystemBase {
     }
 
     public void zeroModulesLimit() {
-        SmartDashboard.putBoolean("Zeroin'",true);
+        SmartDashboard.putBoolean("Zeroin'", true);
+        // ExecutorService es = Executors.newCachedThreadPool();
+        // for (SwerveModule2903 module : modules) {
+        //     es.execute(new Runnable() {
+        //         @Override
+        //         public void run() {
+        //             module.zeroTurnMotor();
+        //         }
+        //     });
+        // }
+        // es.shutdown();
+        // try {
+        //     es.awaitTermination(5, TimeUnit.SECONDS);
+        // } catch (InterruptedException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // }
         ArrayList<Thread> threads = new ArrayList<Thread>();
-        for (SwerveModule2903 module : modules)
+        for (SwerveModule2903 module : modules) {
             threads.add(new Thread(() -> {
                 module.zeroTurnMotor();
             }));
-        for (Thread thread : threads)
+        }
+        for (Thread thread : threads) {
             thread.start();
-        for (Thread thread : threads)
+        }
+        for (Thread thread : threads) {
             try {
                 thread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+        isForward = true;
         SmartDashboard.putBoolean("Zeroin'",false);
+        for (SwerveModule2903 module : modules) {
+            module.TurnMotor.set(ControlMode.Position,0);
+        }
     }
 
     public void zeroModules() {
-        for (SwerveModule2903 module : modules)
+        for (SwerveModule2903 module : modules) {
             module.setZero();
+            module.TurnMotor.set(ControlMode.Position,0);
+        }
     }
 
     public void goToZero() {
@@ -84,7 +112,7 @@ public class SwerveDrive2903 extends SubsystemBase {
     }
 
     public double joystickMag(double x, double y) {
-        return Math.sqrt(x*x+y*y);
+        return Math.abs(Math.sqrt(x*x+y*y));
     }
 
     public void setForward(double speed) {
@@ -111,6 +139,14 @@ public class SwerveDrive2903 extends SubsystemBase {
         }
         for (SwerveModule2903 module : modules)
             module.TurnMotor.set(ControlMode.Position,currentTargetTic+localTic+module.getJoyTurnTicks(degrees));
+    }
+
+    public void stopDrive() {
+        setForward(0);
+        for (SwerveModule2903 module : modules) {
+            module.TurnMotor.set(ControlMode.PercentOutput,0);
+            module.ForwardMotor.set(0);
+        }
     }
 
     public void swerveDrive(double power, double angle, double turn, boolean fieldCentric) {
@@ -142,6 +178,10 @@ public class SwerveDrive2903 extends SubsystemBase {
         LeftRear.ForwardMotor.set(left * (isForward ? 1 : -1));
         RightRear.ForwardMotor.set(right * (isForward ? 1 : -1));
         RightFront.ForwardMotor.set(right * (isForward ? 1 : -1));
+    }
+
+    public void ArcadeDrive(double forward, double turn) {
+        TankDrive(forward+turn,forward-turn);
     }
 
     @Override

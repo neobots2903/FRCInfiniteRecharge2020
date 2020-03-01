@@ -41,6 +41,7 @@ public class Shooter2903 extends SubsystemBase {
     WPI_TalonSRX shooterAngle;
     WPI_TalonSRX intake;
     Servo intakeDropper;
+    Servo shooterBlock;
     DigitalInput shooterAngleTopLimit;
     DigitalInput shooterAngleBottomLimit;
     AnalogInput intakeDetect;
@@ -51,8 +52,10 @@ public class Shooter2903 extends SubsystemBase {
         shooterAngle = new WPI_TalonSRX(RobotMap.shooterAngle);
         intake = new WPI_TalonSRX(RobotMap.intake);
         intakeDropper = new Servo(RobotMap.intakeDropper);
-        // shooterAngleTopLimit = new DigitalInput(RobotMap.shooterAngleTopLimit);
-        // shooterAngleBottomLimit = new DigitalInput(RobotMap.shooterAngleBottomLimit);
+        shooterBlock = new Servo(RobotMap.shooterBlock);
+
+        shooterAngleTopLimit = new DigitalInput(RobotMap.shooterAngleTopLimit);
+        shooterAngleBottomLimit = new DigitalInput(RobotMap.shooterAngleBottomLimit);
         // intakeDetect = new AnalogInput(RobotMap.intakeDetect);
         shooterWheelL.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, kPIDLoopIdx, kTimeoutMs);
         shooterWheelR.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, kPIDLoopIdx, kTimeoutMs);
@@ -65,13 +68,21 @@ public class Shooter2903 extends SubsystemBase {
         // shooterWheelR.configPeakOutputForward(0);
         // shooterWheelL.configPeakOutputReverse(0);
         // shooterWheelR.configPeakOutputReverse(1);
-        shooterAngle.config_kP(0, 4.5);
+        shooterAngle.config_kP(0, 2);
         shooterAngle.setSelectedSensorPosition(0);
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+    }
+
+    public void shooterLock(){
+        shooterBlock.set(1);
+    }
+
+    public void shooterUnlock(){
+        shooterBlock.set(0);
     }
 
     public void intakeOpen() {
@@ -86,12 +97,31 @@ public class Shooter2903 extends SubsystemBase {
         if((intakeDetect.getVoltage()/2)/2.54 < 8) return true; else return false;
     }
 
+    public boolean getTop() {
+        return !shooterAngleTopLimit.get();
+    }
+
+    public boolean getBottom() {
+        return !shooterAngleBottomLimit.get();
+    }
+
+    public double getAngleCurrent() {
+        return shooterAngle.getStatorCurrent();
+    }
+
     public void zeroShooterAngle() {
-        while (!shooterAngleBottomLimit.get()) {
-            shooterAngle.set(ControlMode.PercentOutput, -0.5);
+        while (!getTop()) {
+            shooterAngle.set(ControlMode.PercentOutput, 0.3);
         }
         shooterAngle.set(ControlMode.PercentOutput, 0);
-        shooterAngle.setSelectedSensorPosition(0);
+        shooterAngle.setSelectedSensorPosition(convertAngleToTicks(MAX_LIMIT_ANGLE));
+    }
+
+    public void checkShootLimits() {
+        if (getTop())
+            if (shooterAngle.getMotorOutputVoltage() > 0) shooterAngle.setVoltage(0);
+        if (getBottom())
+            if (shooterAngle.getMotorOutputVoltage() < 0) shooterAngle.setVoltage(0);
     }
 
     public void shootSpeed(double metersPerSec) {

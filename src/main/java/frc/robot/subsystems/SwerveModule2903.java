@@ -13,11 +13,11 @@ public class SwerveModule2903 {
   public CANSparkMax ForwardMotor;
   public WPI_TalonSRX TurnMotor;
   public DigitalInput limit;
-  final int TURN_TICKS_PER_REV = 4096*6;
+  final int TURN_TICKS_PER_REV = 4096 * 6;
   final int FORWARD_TICKS_PER_REV = 42;
   final int DEG_PER_REV = 360;
-  final double FORWARD_WHEEL_DIAM = 0.1016; //m
-  final double FORWARD_WHEEL_CIRC = Math.PI*FORWARD_WHEEL_DIAM; //m
+  final double FORWARD_WHEEL_DIAM = 0.1016; // m
+  final double FORWARD_WHEEL_CIRC = Math.PI * FORWARD_WHEEL_DIAM; // m
   public static final int kPIDLoopIdx = 0;
   public static final int kTimeoutMs = 30;
   private double turnDegPct = 0;
@@ -35,11 +35,11 @@ public class SwerveModule2903 {
     TurnMotor.configContinuousCurrentLimit(0, 0);
     TurnMotor.configVoltageCompSaturation(6);
 
-    //setZero();
+    // setZero();
     setEncoder(0);
 
-    setPowerPercent(1); //set max turn power to just 100%;
-    //TurnMotor.set(ControlMode.Position, getTurnTicks());
+    setPowerPercent(1); // set max turn power to just 100%;
+    // TurnMotor.set(ControlMode.Position, getTurnTicks());
     TurnMotor.config_kP(0, 0.75);
   }
 
@@ -49,8 +49,16 @@ public class SwerveModule2903 {
 
   public void zeroTurnMotor() {
     for (int i = 0; i < 2; i++) {
+      if (i == 1) {
+        try {
+          Thread.sleep(400);
+        } catch (InterruptedException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
       while (!getLimit())
-        TurnMotor.set(ControlMode.PercentOutput, (i==0) ? 0.8 : -0.25);
+        TurnMotor.set(ControlMode.PercentOutput, (i==0) ? 0.9 : -0.75);
       TurnMotor.set(ControlMode.PercentOutput, 0);
     }
     setEncoder(0);

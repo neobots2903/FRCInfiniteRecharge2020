@@ -22,6 +22,8 @@ public class Climb2903 extends SubsystemBase {
         armRiserClose = new Solenoid(RobotMap.armRiserClose);
         armExtendOpen = new Solenoid(RobotMap.armExtendOpen);
         armExtendClose = new Solenoid(RobotMap.armExtendClose);
+        RetractArm();
+        LowerArms();
     }
 
     public void RaiseArms() {

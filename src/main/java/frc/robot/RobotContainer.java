@@ -43,6 +43,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     public final Command teleopCommand;
+    public final Command autoCommand;
     public AHRS ahrs;
     public final NavX2903 navXSubsystem;
     public final ExampleSubsystem m_exampleSubsystem;
@@ -57,6 +58,7 @@ public class RobotContainer {
     public final LIDAR_Lite2903 LIDAR_Lite2903;
     public static NetworkTableInstance ntinst;
     public static NetworkTable tensorTable;
+    public NetworkTable sensorTable;
 
     SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -67,6 +69,12 @@ public class RobotContainer {
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+
+        ntinst = NetworkTableInstance.getDefault();
+        tensorTable = ntinst.getTable("tensorflow");   
+        sensorTable = ntinst.getTable("sensorTable");  
+        sensorTable.getEntry("videoRecord").setBoolean(false);
+
         try {
             /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
             /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
@@ -77,11 +85,13 @@ public class RobotContainer {
         }
 
         teleopCommand = new TeleOp2903(this);
+        autoCommand = new AutoMain2903(this);
         navXSubsystem = new NavX2903(this);
         m_exampleSubsystem = new ExampleSubsystem();
         swerveDriveSubsystem = new SwerveDrive2903();
         climbSubsystem = new Climb2903();
         shooterSubsystem = new Shooter2903();
+        shooterSubsystem.intakeClose();
         driveJoy = new Joystick(RobotMap.driveJoy);
         opJoy = new Joystick(RobotMap.opJoy);
         limelightSubsystem = new Limelight2903();
@@ -96,10 +106,9 @@ public class RobotContainer {
 
         // Configure the button bindings
         navXSubsystem.zero();
-        ntinst = NetworkTableInstance.getDefault();  
-        tensorTable = ntinst.getTable("tensorflow");   
+
         configureButtonBindings();
-        m_chooser.setDefaultOption("Main Auto", new AutoMain2903());
+        m_chooser.setDefaultOption("Main Auto", new AutoMain2903(this));
         m_chooser.addOption("Spiiiiinnnnn", new Spin2903(this));
         m_chooser.addOption("Encoder Reading", new Encoder2903(this));
         SmartDashboard.putData("Auto mode", m_chooser);

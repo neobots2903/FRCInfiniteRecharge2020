@@ -20,6 +20,7 @@ public class Encoder2903 extends CommandBase {
 
     @Override
     public void initialize() {
+        r.swerveDriveSubsystem.stopDrive();
     }
 
 
